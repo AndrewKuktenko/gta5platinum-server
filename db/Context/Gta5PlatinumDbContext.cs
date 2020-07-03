@@ -16,7 +16,7 @@ namespace Gta5Platinum.DataAccess.Context
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {            
-            optionsBuilder.UseMySql("Server = 127.0.0.1; Database = platinum; Uid = root; Pwd = 1234");
+            optionsBuilder.UseMySql("Server = 127.0.0.1; Database = platinum; Uid = biolion; Pwd = osatw2je");
             
         }
 
