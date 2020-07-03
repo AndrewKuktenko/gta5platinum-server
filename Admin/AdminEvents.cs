@@ -37,10 +37,7 @@ namespace Gta5Platinum.Server.Admin
                 //NAPI.Util.ConsoleOutput("Total players in the database: " + _userService.GetUser(1).Email);
             }
         }
-
-
-
-        
+                        
 
         [Command("car")]
         public void Carpawn(Player player, VehicleHash car, int color)
@@ -49,16 +46,17 @@ namespace Gta5Platinum.Server.Admin
         }
         [Command("tp")]
         public void Teleport(Player player, int x, int y, int z)
-        {
-            Vector3 PlayerPos = NAPI.Entity.GetEntityPosition(player);
-            NAPI.Entity.SetEntityPosition(player, new Vector3(x, y, z));            
+        {            
+            
+            player.Position = new Vector3(x, y, z);            
         }
 
         [Command("tptocoord")]
-        public void TeleportToCoord(Player player)
+        public void TeleportToCoord(Player player, NetHandle marker)
         {
-            Vector3 coord = NAPI.Marker.GetMarkerDirection(player) + new Vector3(0, 0, 10);
-            NAPI.Player.SpawnPlayer(player, coord);
+            Vector3 coord = NAPI.Marker.GetMarkerDirection(marker);
+
+            player.Position = coord;
         }
 
         [Command("goto")]
