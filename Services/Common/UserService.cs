@@ -2,6 +2,7 @@
 using Gta5Platinum.DataAccess.Account.UserModels;
 using Gta5Platinum.DataAccess.Context;
 using Gta5Platinum.DataAccess.UnitOfWork;
+using Gta5Platinum.Server.Client.Authorization;
 using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -17,7 +18,7 @@ namespace Gta5Platinum.Server.Services.Common
         /// регистрация пользоватя
         /// </summary>
         /// <returns>bool</returns>
-        bool CreateUser(Player player, string email, string login, string password);
+        int CreateUser(Player player, string email, string login, string password);
 
         /// <summary>
         /// получает пользоватя через его Id
@@ -60,7 +61,7 @@ namespace Gta5Platinum.Server.Services.Common
             _unitOfWork = new Gta5PlatinumUnitOfWork();
         }
 
-        public bool CreateUser(Player player, string email, string login, string password)
+        public int CreateUser(Player player, string email, string login, string password)
         {           
             User userByLogin = GetSingleUser(u => u.Login == login);
             User userByEmail = GetSingleUser(u => u.Email == email);
@@ -90,20 +91,28 @@ namespace Gta5Platinum.Server.Services.Common
 
                         dbContext.SaveChanges();
 
-                        return true;
+                        return 1;       // Пользователь успешно зарегестрирован
                     }
-                    catch (Exception)
+                    catch (Exception) // Ошибка сервера
                     {
-                        return false;
+                        return 4; 
                     }
 
                 }
             }
-            else
+            else if (userByLogin != null) // Пользователь с таким логином уже существует
             {
-                return false;
-            }            
-            
+                return 2; 
+            }
+            else if (userByEmail != null) // Пользователь с такой почтой уже существует
+            {
+                return 3; 
+            }
+            else // Ошибка сервера
+            {
+                return 4;  
+            }
+
         }
     
 
@@ -115,25 +124,39 @@ namespace Gta5Platinum.Server.Services.Common
             }
         }
 
-        public bool TryLogIn(string userLogin, string userPassword)
+        public LoginInfo TryLogIn(string userLogin, string userPassword)
         {
+            var loginInfo = new LoginInfo();
+
             using (var dbContext = new Gta5PlatinumDbContext())
             {
                 try
                 {
-                    var user = dbContext.Users.Single(u => u.Login == userLogin);
+                    var user = dbContext.Users.Single(u => u.Login == userLogin);                    
 
                     if (user.Password == userPassword)
                     {
-                        return true;
+                        loginInfo.UserId = user.UserId;
+                        loginInfo.Status = 1;
+
+                        return loginInfo;
+                    }
+                    else if (user.Password != userPassword)
+                    {
+                        loginInfo.Status = 2;
+
+                        return loginInfo;
                     }
                 }
-                catch (Exception)
+                catch (Exception) // Неверный логин, или такого пользователя не существует
                 {
-                    return false;
-                }                                
+                    loginInfo.Status = 3;
 
-                return false;
+                    return loginInfo;
+                }
+
+                loginInfo.Status = 4;
+                return loginInfo; // Сервер не отвечает
             }
         }
 

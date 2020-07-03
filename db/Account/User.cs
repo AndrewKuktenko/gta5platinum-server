@@ -15,14 +15,15 @@ namespace Gta5Platinum.DataAccess.Account
         public string Serial { get; set; }
         public string SocialClubName { get; set; }
         public ulong SocialClubId { get; set; }
-        public string Ip { get; set; }    
+        public string Ip { get; set; }
         //public bool? IsFirstLogin { get; set; }
+        //public bool IsFirstLogin { get; set; } = true;
         public bool? IsAdmin { get; set; }
         public bool? IsModerator { get; set; }
         public bool? IsHelper { get; set; }
         public int DonateBalance { get; set; }
         //public Property UserProperty { get; set; }
-        public IEnumerable<Character> Characters { get; set; }
+        public List<Character> Characters { get; set; }
 
         public User()
         {

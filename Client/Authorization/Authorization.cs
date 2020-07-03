@@ -20,29 +20,52 @@ namespace Gta5Platinum.Server.Client.Authorization
         [RemoteEvent("OnPlayerLoginAttempt")]
         public void OnPlayerLoginAttempt(Player player, string username, string password)
         {            
-            bool success = _userService.TryLogIn(username, password);
+            LoginInfo loginInfo = _userService.TryLogIn(username, password);
 
             NAPI.Util.ConsoleOutput($"[Login Attempt] Username {username} | Password: {password}"); //TODO: Заменить на логирование
 
-            if (success == true)
+            if (loginInfo.Status == 1) // Успешный вход
             {
+                player.SetData<int>("UserId", (int)loginInfo.UserId);
                 player.TriggerEvent("LoginResult", 1);
             }
-            else player.TriggerEvent("LoginResult", 0);
+            else if (loginInfo.Status == 2) // Неверный пароль
+            { 
+                player.TriggerEvent("LoginResult", 2); 
+            }
+            else if (loginInfo.Status == 3) // Неверный логин, или такого пользователя не существует
+            {
+                player.TriggerEvent("LoginResult", 3);
+            }
+            else // Сервер не отвечает
+            {
+                player.TriggerEvent("LoginResult", 4);
+            }
         }
 
         [RemoteEvent("OnPlayerRegisterAttempt")]
         public void OnPlayerRegisterAttempt(Player player, string email, string username, string password)
         {           
-            bool success = _userService.CreateUser(player, email, username, password);
+            int status = _userService.CreateUser(player, email, username, password);
 
             NAPI.Util.ConsoleOutput($"[Registration Attempt] Username {username} | Password: {password}"); //TODO: Заменить на логирование
 
-            if (success == true)
+            if (status == 1)
             {
                 player.TriggerEvent("RegistrationResult", 1);
             }
-            else player.TriggerEvent("RegistrationResult", 0);
+            else if (status == 2)
+            {
+                player.TriggerEvent("RegistrationResult", 2);
+            }
+            else if (status == 3)
+            {
+                player.TriggerEvent("RegistrationResult", 3);
+            }
+            else
+            {
+                player.TriggerEvent("RegistrationResult", 4);
+            }
         }
     }
 }
