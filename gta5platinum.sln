@@ -6,7 +6,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gta5Platinum.Server", "Gta5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gta5Platinum.DataAccess", "db\Gta5Platinum.DataAccess.csproj", "{248CC820-BB7C-4DE5-9289-4C96BB85736C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gta5Platinum.Client", "..\..\..\client_packages\gta5platinum-client\Gta5Platinum.Client.csproj", "{D9D73583-CBF2-4E55-9615-459754F44507}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gta5Platinum.Client", "..\..\..\gta5platunim-client\Gta5Platinum.Client.csproj", "{902CC00E-5C92-48F5-B5B6-1C5C809F30D2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,9 +22,10 @@ Global
 		{248CC820-BB7C-4DE5-9289-4C96BB85736C}.Debug|Any CPU.Build.0 = Release|Any CPU
 		{248CC820-BB7C-4DE5-9289-4C96BB85736C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{248CC820-BB7C-4DE5-9289-4C96BB85736C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D9D73583-CBF2-4E55-9615-459754F44507}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D9D73583-CBF2-4E55-9615-459754F44507}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D9D73583-CBF2-4E55-9615-459754F44507}.Release|Any CPU.Build.0 = Release|Any CPU
+		{902CC00E-5C92-48F5-B5B6-1C5C809F30D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{902CC00E-5C92-48F5-B5B6-1C5C809F30D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{902CC00E-5C92-48F5-B5B6-1C5C809F30D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{902CC00E-5C92-48F5-B5B6-1C5C809F30D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
