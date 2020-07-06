@@ -57,11 +57,13 @@ namespace Gta5Platinum.Server.Admin
         {            
             NAPI.Vehicle.CreateVehicle(NAPI.Util.GetHashKey(car), NAPI.Entity.GetEntityPosition(player), 0f, 0, 0);
         }
+
         [Command("carcolor")]
         public void CarColor (Player player, int color)
         {
             player.Vehicle.PrimaryColor = color;
         }
+
         [Command("caracc")]
         public void CarAcc(Player player, float number)
         {
@@ -151,5 +153,28 @@ namespace Gta5Platinum.Server.Admin
             }*/
 
         }
+
+
+        [RemoteEvent("admChangeWeather")]
+        public void AdminEvent_admChangeWeather(Player player, string select)
+        {
+            NAPI.World.SetWeather(select);
+            NAPI.Notification.SendNotificationToPlayer(player, "Погода изменилась", true);
+        }
+
+        [RemoteEvent("admChangeTime")]
+        public void AdminEvent_admChangeTime(Player player, string hour)
+        {
+            int new_hour = Convert.ToInt32(hour);
+            NAPI.World.SetTime(new_hour, 0, 0);
+            NAPI.Notification.SendNotificationToPlayer(player, "~g~Время изменено: " + new_hour, true);
+        }
+
+        [RemoteEvent("admChangeSkin")]
+        public void AdminEvent_admChangeSkin(Player player, uint model)
+        {
+            NAPI.Player.SetPlayerSkin(player, model);
+        }
+
     }
 }
