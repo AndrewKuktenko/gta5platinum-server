@@ -1,6 +1,7 @@
 ﻿//using Gta5Platinum.DataAccess.Account.UserModels;
 using Gta5Platinum.DataAccess.Account;
 using Gta5Platinum.DataAccess.Context;
+using Gta5Platinum.Server.Client.Authorization;
 using Gta5Platinum.Server.Services.Common;
 /*using Gta5Platinum.Server.Services.Common;
 using Gta5Platinum.Server.Unity.DependencyResolvers;*/
@@ -21,7 +22,7 @@ namespace Gta5Platinum.Server.Admin
         public void GetId(Player player)
         {
 
-            player.SetData<int>("ID", 1212312);
+            player.GetData<int>("ID");
             int pInfo = player.GetData<int>("ID");
             int aInfo = player.Id;
             NAPI.Chat.SendChatMessageToPlayer(player, $"Data{pInfo} Id{aInfo}");
@@ -37,13 +38,26 @@ namespace Gta5Platinum.Server.Admin
                 //NAPI.Util.ConsoleOutput("Total players in the database: " + _userService.GetUser(1).Email);
             }
         }
-                        
+
+        [Command("event")]
+        public void ServerToClientEvent(Player player)
+        {
+            
+;            var test = new Test() { value = "text", text = "testtext" };
+
+            player.TriggerEvent("onMessageFromServer", NAPI.Util.ToJson(test).ToString());
+            NAPI.Util.ConsoleOutput(NAPI.Util.ToJson(test).ToString());
+            
+            
+        }
+
 
         [Command("car")]
-        public void Carpawn(Player player, VehicleHash car, int color)
-        {
-            NAPI.Vehicle.CreateVehicle(car, NAPI.Entity.GetEntityPosition(player), 0f, 0, 0);
+        public void Carpawn(Player player, string car, int color)
+        {            
+            NAPI.Vehicle.CreateVehicle(NAPI.Util.GetHashKey(car), NAPI.Entity.GetEntityPosition(player), 0f, 0, 0);
         }
+        
         [Command("tp")]
         public void Teleport(Player player, int x, int y, int z)
         {            
