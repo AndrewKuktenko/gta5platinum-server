@@ -1,8 +1,9 @@
-﻿using Gta5Platinum.DataAccess.Context;
+﻿using Gta5Platinum.DataAccess.Account.UserModels;
+using Gta5Platinum.DataAccess.Context;
 using GTANetworkAPI;
 using System.Linq;
 
-namespace Gta5Platinum.Server.Client.Authorization
+namespace Gta5Platinum.Server.player.Authorization
 {
     public class CharacterSetup
     {
@@ -17,9 +18,42 @@ namespace Gta5Platinum.Server.Client.Authorization
                 player.Name = character.Name;
                 player.Nametag = character.NameTag;
                 player.Position = new Vector3(character.Xpos, character.Ypos, character.Zpos);
-            }
+
+                NAPI.Player.SetPlayerHeadBlend(player, GetCharacterHeadBlend(character));
+                SetClothesOnSpawn(player, character);         
+            }            
             
-            
+        }
+
+        public void SetClothesOnSpawn(Player player, Character character)
+        {
+            player.SetClothes(1, character.Clothes.clothes_1, 0);
+            player.SetClothes(2, character.Clothes.clothes_2, 0);
+            player.SetClothes(3, character.Clothes.clothes_3, 0);
+            player.SetClothes(4, character.Clothes.clothes_4, 0);
+            player.SetClothes(5, character.Clothes.clothes_5, 0);
+            player.SetClothes(6, character.Clothes.clothes_6, 0);
+            player.SetClothes(7, character.Clothes.clothes_7, 0);
+            player.SetClothes(8, character.Clothes.clothes_8, 0);
+            player.SetClothes(9, character.Clothes.clothes_9, 0);
+            player.SetClothes(10, character.Clothes.clothes_10, 0);
+            player.SetClothes(11, character.Clothes.clothes_11, 0);
+        }
+
+        public HeadBlend GetCharacterHeadBlend(Character character)
+        {
+            return new HeadBlend()
+            { 
+                ShapeFirst = character.HeadBlend.ShapeFirst,
+                ShapeSecond = character.HeadBlend.ShapeSecond,
+                ShapeThird = character.HeadBlend.ShapeThird,
+                SkinFirst = character.HeadBlend.SkinFirst,
+                SkinSecond = character.HeadBlend.SkinSecond,
+                SkinThird = character.HeadBlend.SkinThird,
+                ShapeMix = character.HeadBlend.ShapeMix,
+                SkinMix = character.HeadBlend.SkinMix,
+                ThirdMix = character.HeadBlend.SkinMix
+            };            
         }
     }
 }

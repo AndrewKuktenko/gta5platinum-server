@@ -18,6 +18,7 @@ namespace Gta5Platinum.DataAccess.Account.UserModels
         public Finance UserFinances { get; set; }
         public IEnumerable<InventoryItem> CharacterInventory { get; set; }
         public CharacterClothes Clothes { get; set; }
+        public CharacterCustomization HeadBlend { get; set; }
         [ForeignKey("UserId")]
         public int UserId { get; set; }
         public User User { get; set; }
