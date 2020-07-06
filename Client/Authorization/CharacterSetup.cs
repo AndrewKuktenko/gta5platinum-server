@@ -1,6 +1,7 @@
 ﻿using Gta5Platinum.DataAccess.Account.UserModels;
 using Gta5Platinum.DataAccess.Context;
 using GTANetworkAPI;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Gta5Platinum.Server.player.Authorization
@@ -18,6 +19,8 @@ namespace Gta5Platinum.Server.player.Authorization
                 player.Name = character.Name;
                 player.Nametag = character.NameTag;
                 player.Position = new Vector3(character.Xpos, character.Ypos, character.Zpos);
+
+                //player.SetCustomization(character.Gender, GetCharacterHeadBlend(character), character.HeadBlend.EyeColor, character.HeadBlend.HairColor, character.HeadBlend.HighlightColor, new Dictionary<int, HeadOverlay>(), new Decoration[] { new Decoration() { Collection = 0, Overlay = 0} });
 
                 NAPI.Player.SetPlayerHeadBlend(player, GetCharacterHeadBlend(character));
                 SetClothesOnSpawn(player, character);         

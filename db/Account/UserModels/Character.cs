@@ -10,6 +10,7 @@ namespace Gta5Platinum.DataAccess.Account.UserModels
     {
         [Key]        
         public int CharacterId { get; set; }
+        public bool Gender { get; set; }
         public string Name { get; set; }
         public string NameTag { get; set; }
         public int Health { get; set; } = 100;

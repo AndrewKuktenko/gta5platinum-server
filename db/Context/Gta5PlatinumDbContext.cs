@@ -49,8 +49,8 @@ namespace Gta5Platinum.DataAccess.Context
                     SocialClubId = 5184516684,
                     SocialClubName = "petyxblyat"
                 });
-            
 
+            
             /*modelBuilder
                 .Entity<Finance>(eb =>
                 {

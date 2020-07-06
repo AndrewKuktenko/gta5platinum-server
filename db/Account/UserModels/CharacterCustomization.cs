@@ -1,7 +1,19 @@
-﻿namespace Gta5Platinum.DataAccess.Account.UserModels
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Gta5Platinum.DataAccess.Account.UserModels
 {
     public class CharacterCustomization
     {
+        [Key]
+        public int CustomizationId { get; set; }
+
+        [ForeignKey("CharacterId")]
+        public int CharacterId { get; set; }
+        public byte EyeColor { get; set; }
+        public byte HairColor { get; set; }
+        public byte HighlightColor { get; set; }
+        //public float[] FaceFeatures { get; set; }
         public byte ShapeFirst { get; set; } //Parents.Mother
         public byte ShapeSecond { get; set; } // Parents.Father
         public byte ShapeThird { get; set; } = 0;

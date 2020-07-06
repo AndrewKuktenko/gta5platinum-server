@@ -57,7 +57,18 @@ namespace Gta5Platinum.Server.Admin
         {            
             NAPI.Vehicle.CreateVehicle(NAPI.Util.GetHashKey(car), NAPI.Entity.GetEntityPosition(player), 0f, 0, 0);
         }
-        
+        [Command("carcolor")]
+        public void CarColor (Player player, int color)
+        {
+            player.Vehicle.PrimaryColor = color;
+        }
+        [Command("caracc")]
+        public void CarAcc(Player player, float number)
+        {
+            player.Vehicle.EnginePowerMultiplier = number;
+        }
+
+
         [Command("tp")]
         public void Teleport(Player player, int x, int y, int z)
         {            
