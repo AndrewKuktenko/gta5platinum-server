@@ -1,4 +1,4 @@
-﻿using Gta5Platinum.DataAccess.Account.UserModels;
+﻿using Gta5Platinum.DataAccess.Account;
 using Gta5Platinum.DataAccess.Context;
 using System.Collections.Generic;
 using System.Linq;

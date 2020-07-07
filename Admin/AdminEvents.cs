@@ -1,13 +1,12 @@
 ﻿//using Gta5Platinum.DataAccess.Account.UserModels;
-using Gta5Platinum.DataAccess.Account;
 using Gta5Platinum.DataAccess.Context;
 using Gta5Platinum.Server.Client.Authorization;
 using Gta5Platinum.Server.Services.Common;
 /*using Gta5Platinum.Server.Services.Common;
 using Gta5Platinum.Server.Unity.DependencyResolvers;*/
 using GTANetworkAPI;
-using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Gta5Platinum.Server.Admin
 {
@@ -26,6 +25,13 @@ namespace Gta5Platinum.Server.Admin
             int pInfo = player.GetData<int>("ID");
             int aInfo = player.Id;
             NAPI.Chat.SendChatMessageToPlayer(player, $"Data{pInfo} Id{aInfo}");
+        }
+
+        [Command("voice")]
+        public void Carpawn(Player player, Player player1)
+        {
+            player.EnableVoiceTo(player1);
+
         }
 
         [ServerEvent(Event.ResourceStart)]
@@ -50,17 +56,47 @@ namespace Gta5Platinum.Server.Admin
             
             
         }
+        [Command("spawnped")]
+        public void SpawnPed(Player player, PedHash skin)
+        {
+            var ped = NAPI.Ped.CreatePed(skin, player.Position.Around(5), -1);
+            /*mp.events.add('setFollow', function(toggle, entity) {  /// entity is the guy that player will follow him
+                if (toggle)
+                {
+                    if (entity && mp.players.exists(entity))
+                        localplayer.taskFollowToOffsetOf(entity.handle, 0, -1, 0, 1.0, -1, 1.0, true)
+                }
+                else
+                    localplayer.clearTasks();
+            });*/
 
+        }
 
         [Command("car")]
-        public void Carpawn(Player player, string car, int color)
-        {            
-            NAPI.Vehicle.CreateVehicle(NAPI.Util.GetHashKey(car), NAPI.Entity.GetEntityPosition(player), 0f, 0, 0);
+        public void Carpawn(Player player, string car)
+        {                        
+            var vehicle = NAPI.Vehicle.CreateVehicle(NAPI.Util.GetHashKey(car), NAPI.Entity.GetEntityPosition(player), 0f, 0, 0);
+            vehicle.SetData("Engine", false);
+
+        }
+        [Command("carlocked")]
+        public void CarpawnLocked(Player player, string car)
+        {
+            var vehicle = NAPI.Vehicle.CreateVehicle(NAPI.Util.GetHashKey(car), NAPI.Entity.GetEntityPosition(player), 0f, 0, 0);
+            vehicle.SetData("Engine", false);
+            vehicle.Locked = true;
         }
         [Command("carcolor")]
         public void CarColor (Player player, int color)
         {
             player.Vehicle.PrimaryColor = color;
+            //player.Vehicle.Controller.
+        }
+        [Command("setskin")]
+        public void SetSkin(Player player, PedHash skin)
+        {
+
+            player.SetSkin(skin);
         }
         [Command("caracc")]
         public void CarAcc(Player player, float number)
@@ -105,10 +141,28 @@ namespace Gta5Platinum.Server.Admin
             NAPI.Chat.SendChatMessageToPlayer(player, "GPS [X: " + PlayerPos.X + " Y: " + PlayerPos.Y + " Z: " + PlayerPos.Z + "]");
         }
 
-        [ServerEvent(Event.PlayerEnterVehicle)]
+        [ServerEvent(Event.PlayerEnterVehicleAttempt)]
         public void OnPlayerEnterVehicle(Player player, Vehicle vehicle, sbyte seatID)
         {
-            //NAPI.Player.SetPlayerHealth(player, 0);
+            if (vehicle.GetData<bool>("Engine") == false && player.VehicleSeat == 0)
+            {
+                NAPI.Vehicle.SetVehicleEngineStatus(vehicle.Handle, false);
+                NAPI.Vehicle.SetVehicleEngineStatus(vehicle.Handle, true);
+                NAPI.Vehicle.SetVehicleEngineStatus(vehicle.Handle, false);
+            }            
+        }
+
+        [Command("engine")]
+        public void EngineToogle(Player player)
+        {
+            var status = NAPI.Vehicle.GetVehicleEngineStatus(player.Vehicle.Handle);
+            NAPI.Vehicle.SetVehicleEngineStatus(player.Vehicle.Handle, !status);
+        }
+        [Command("lock")]
+        public void LockToogle(Player player)
+        {
+            var status = NAPI.Vehicle.GetVehicleLocked(player.Vehicle.Handle);
+            NAPI.Vehicle.SetVehicleLocked(player.Vehicle.Handle, !status);
         }
 
         [Command("newuser")]
@@ -116,39 +170,7 @@ namespace Gta5Platinum.Server.Admin
         {
             var _userService = new UserService();
 
-            _userService.CreateUser(player, email, login, password);
-
-            //int userLastId = _userService.GetLastUserId();
-            
-            /*using (var dbContext = new Gta5PlatinumDbContext())
-            {
-                userLastId = dbContext.Users
-                .OrderByDescending(u => u.UserId)
-                .Take(1)
-                .Select(u => u.UserId)
-                .Single();
-            }*/
-
-            /*User user = new User
-            {
-                UserId = ++userLastId,
-                Email = email,
-                Login = login,
-                Password = password,
-                SocialClubId = player.SocialClubId,
-                Serial = player.Serial,
-                Ip = player.Address,
-                DonateBalance = 0,
-                //Characters = new List<Character>()
-            };*/
-
-            /*using (var dbContext = new Gta5PlatinumDbContext())
-            {
-
-                dbContext.Users.Add(user);
-
-                dbContext.SaveChanges();
-            }*/
+            _userService.CreateUser(player, email, login, password);            
 
         }
     }

@@ -1,5 +1,4 @@
-﻿using GTANetworkAPI;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Gta5Platinum.DataAccess.Account.UserModels
 {
@@ -32,111 +31,7 @@ namespace Gta5Platinum.DataAccess.Account.UserModels
         public int window { get; set; }
         public int suspension { get; set; }
 
-        public static void CarLock(Player Player)
-        {
-            Vehicle[] vehicles = new Vehicle[] { Player.GetData<Vehicle>("UserVehicle"), Player.GetData<Vehicle>("FrakVehicle"), Player.GetData<Vehicle>("RentVehicle") };
-            Vehicle vehicleToLock = null;
-
-            foreach (Vehicle vehicle in vehicles)
-            {
-                if (vehicle != null && Player.Position.DistanceTo2D(vehicle.Position) <= 2)
-                {
-                    vehicleToLock = vehicle;
-                }
-            }
-
-            if (vehicleToLock != null)
-            {
-                vehicleToLock.Locked = !vehicleToLock.Locked;
-
-                if (!vehicleToLock.Locked)
-                {
-                    Player.SendNotification($"~g~Das Fahrzeug wurde aufgeschlossen!");
-                }
-                else
-                {
-                    Player.SendNotification($"~r~Das Fahrzeug wurde abgeschlossen!");
-                }
-            }
-            else
-            {
-                Player.SendNotification("Du befindest dich nicht in der nähe von einem deiner Fahrzeuge!");
-            }
-        }
-
-        public static void Engine(Player Player)
-        {
-            Vehicle personal_vehicle = Player.GetData<Vehicle>("UserVehicle");
-            Vehicle frak_vehicle = Player.GetData<Vehicle>("FrakVehicle");
-            Vehicle rent_vehicle = Player.GetData<Vehicle>("RentVehicle");
-
-            int zahl = 0;
-
-            if (!Player.IsInVehicle)
-            {
-                Player.SendNotification("Du befindest dich in keinem Fahrzeug!");
-                return;
-            }
-
-            if (Player.HasData("UserVehicle"))
-            {
-                if (Player.Vehicle.GetData<int>("ID") == Player.GetData<int>("ID"))
-                {
-                    zahl = 1;
-                }
-            }
-
-            if (Player.HasData("FrakVehicle"))
-            {
-                if (Player.Vehicle.GetData<int>("ID") == Player.GetData<int>("ID"))
-                {
-                    zahl = 2;
-                }
-            }
-
-            if (Player.HasData("RentVehicle"))
-            {
-                if (Player.Vehicle.GetData<int>("ID") == Player.GetData<int>("ID"))
-                {
-                    zahl = 3;
-                }
-            }
-
-            switch (zahl)
-            {
-                case 1:
-                    EngineStatus(Player);
-                    break;
-
-                case 2:
-                    EngineStatus(Player);
-                    break;
-
-                case 3:
-                    EngineStatus(Player);
-                    break;
-
-                default:
-                    Player.SendNotification("~r~Du besitzt für dieses Fahrzeug keinen Schlüssel!");
-                    break;
-            }
-        }
-
-        public static void EngineStatus(Player Player)
-        {
-            bool engine = Player.Vehicle.EngineStatus;
-
-            if (engine == false)
-            {
-                engine = Player.Vehicle.EngineStatus = true;
-                Player.SendNotification("~g~Der Motor wurde gestartet!");
-            }
-            else
-            {
-                engine = Player.Vehicle.EngineStatus = false;
-                Player.SendNotification("~r~Der Motor wurde augeschaltet");
-            }
-        }
+                       
 
         /*public static void GetLastCarPosition(Player Player)
         {

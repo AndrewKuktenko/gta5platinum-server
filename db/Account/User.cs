@@ -1,5 +1,4 @@
-﻿using Gta5Platinum.DataAccess.Account.UserModels;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 

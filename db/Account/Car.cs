@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Gta5Platinum.DataAccess.Account.UserModels
+namespace Gta5Platinum.DataAccess.Account
 {
     public class Car
     {
