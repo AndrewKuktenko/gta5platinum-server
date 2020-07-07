@@ -17,10 +17,10 @@ namespace Gta5Platinum.DataAccess.Account
         public PropertyType Type { get; set; }
 
         [ForeignKey("CharacterId")]
-        public int? CharacterId { get; set; }
+        public int CharacterId { get; set; }
         public Character Character { get; set; }
         [ForeignKey("OrganizationId")]
-        public int? OrganizationId { get; set; }
+        public int OrganizationId { get; set; }
         public Organization Organization { get; set; }
 
         [StringLength(48)]

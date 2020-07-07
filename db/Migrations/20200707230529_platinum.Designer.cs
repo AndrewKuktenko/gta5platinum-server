@@ -3,14 +3,16 @@ using System;
 using Gta5Platinum.DataAccess.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Gta5Platinum.DataAccess.Migrations
 {
     [DbContext(typeof(Gta5PlatinumDbContext))]
-    partial class Gta5PlatinumDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200707230529_platinum")]
+    partial class platinum
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

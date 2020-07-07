@@ -19,6 +19,7 @@ namespace Gta5Platinum.DataAccess.Account
         public IEnumerable<InventoryItem> CharacterInventory { get; set; }
         public CharacterClothes Clothes { get; set; }
         public CharacterCustomization HeadBlend { get; set; }
+        public Organization Organization { get; set; }
         [ForeignKey("UserId")]
         public int UserId { get; set; }
         public User User { get; set; }
@@ -27,6 +28,7 @@ namespace Gta5Platinum.DataAccess.Account
         public float Xpos { get; set; }
         public float Ypos { get; set; }
         public float Zpos { get; set; }
+        public List<Property> Properties { get; set; }
 
         //public double[] last_location { get; set; } = new double[] { -1167.994, -700.4285, 21.89281 };
         //public double[] temp_location { get; set; }
@@ -35,6 +37,7 @@ namespace Gta5Platinum.DataAccess.Account
         {
             CharacterInventory = new List<InventoryItem>();
             UserVehicles = new List<UserVehicle>();
+            Properties = new List<Property>();
         }
     }
 }
