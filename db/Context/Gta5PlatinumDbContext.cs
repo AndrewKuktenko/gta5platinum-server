@@ -11,7 +11,7 @@ namespace Gta5Platinum.DataAccess.Context
         // Initialize a new MySQL connection with the given connection parameters 
         public Gta5PlatinumDbContext()
         {
-            //Database.EnsureDeleted();
+            Database.EnsureDeleted();
             Database.EnsureCreated();
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

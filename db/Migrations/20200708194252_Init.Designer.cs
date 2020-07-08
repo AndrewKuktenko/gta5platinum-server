@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gta5Platinum.DataAccess.Migrations
 {
     [DbContext(typeof(Gta5PlatinumDbContext))]
-    [Migration("20200707230529_platinum")]
-    partial class platinum
+    [Migration("20200708194252_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -52,6 +52,18 @@ namespace Gta5Platinum.DataAccess.Migrations
                     b.Property<int>("Livery")
                         .HasColumnType("int");
 
+                    b.Property<int>("NeonColorAlpha")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NeonColorBlue")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NeonColorGreen")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NeonColorRed")
+                        .HasColumnType("int");
+
                     b.Property<bool>("Neons")
                         .HasColumnType("tinyint(1)");
 
@@ -70,13 +82,31 @@ namespace Gta5Platinum.DataAccess.Migrations
                     b.Property<int>("PrimaryColor")
                         .HasColumnType("int");
 
+                    b.Property<int>("PrimaryType")
+                        .HasColumnType("int");
+
                     b.Property<int>("SecondaryColor")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SecondaryType")
                         .HasColumnType("int");
 
                     b.Property<bool>("SpecialLight")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<int>("TrimColor")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TyreSmokeColorAlpha")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TyreSmokeColorBlue")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TyreSmokeColorGreen")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TyreSmokeColorRed")
                         .HasColumnType("int");
 
                     b.Property<int>("WheelColor")
@@ -455,8 +485,17 @@ namespace Gta5Platinum.DataAccess.Migrations
 
             modelBuilder.Entity("Gta5Platinum.DataAccess.Account.UserModels.UserVehicle", b =>
                 {
-                    b.Property<int>("_id")
+                    b.Property<int>("VehicleId")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("Brakes")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CarModel")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<int>("Carslot")
                         .HasColumnType("int");
 
                     b.Property<int?>("CharacterId")
@@ -468,68 +507,93 @@ namespace Gta5Platinum.DataAccess.Migrations
                     b.Property<int>("Color2")
                         .HasColumnType("int");
 
-                    b.Property<int>("brakes")
+                    b.Property<int>("Exhaust")
                         .HasColumnType("int");
 
-                    b.Property<int>("bwheels")
+                    b.Property<int>("Frame")
                         .HasColumnType("int");
 
-                    b.Property<string>("carmodel")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<int>("carslot")
+                    b.Property<int>("FrontBumper")
                         .HasColumnType("int");
 
-                    b.Property<int>("exhaust")
+                    b.Property<int>("FrontWheels")
                         .HasColumnType("int");
 
-                    b.Property<int>("fbumber")
+                    b.Property<int>("Grill")
                         .HasColumnType("int");
 
-                    b.Property<int>("frame")
+                    b.Property<int?>("LastLocationId")
                         .HasColumnType("int");
 
-                    b.Property<int>("fwheels")
-                        .HasColumnType("int");
-
-                    b.Property<int>("grill")
-                        .HasColumnType("int");
-
-                    b.Property<float>("last_rotation")
+                    b.Property<float>("LastRotation")
                         .HasColumnType("float");
 
-                    b.Property<int>("motortuning")
+                    b.Property<int>("MotorTuning")
                         .HasColumnType("int");
 
-                    b.Property<int>("rbumber")
+                    b.Property<int>("RearBumper")
                         .HasColumnType("int");
 
-                    b.Property<int>("roof")
+                    b.Property<int>("RearWheels")
                         .HasColumnType("int");
 
-                    b.Property<int>("spoilers")
+                    b.Property<int>("Roof")
                         .HasColumnType("int");
 
-                    b.Property<int>("sskirt")
+                    b.Property<int>("SideSkirt")
                         .HasColumnType("int");
 
-                    b.Property<int>("suspension")
+                    b.Property<int>("Spoilers")
                         .HasColumnType("int");
 
-                    b.Property<int>("transmission")
+                    b.Property<int>("Suspension")
                         .HasColumnType("int");
 
-                    b.Property<int>("turbo")
+                    b.Property<int>("Transmission")
                         .HasColumnType("int");
 
-                    b.Property<int>("window")
+                    b.Property<int>("Turbo")
                         .HasColumnType("int");
 
-                    b.HasKey("_id");
+                    b.Property<int>("Window")
+                        .HasColumnType("int");
+
+                    b.HasKey("VehicleId");
 
                     b.HasIndex("CharacterId");
 
+                    b.HasIndex("LastLocationId");
+
                     b.ToTable("UserVehicles");
+                });
+
+            modelBuilder.Entity("Gta5Platinum.DataAccess.Account.Vector", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CharacterId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PropertyId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("VehicleId")
+                        .HasColumnType("int");
+
+                    b.Property<float>("X")
+                        .HasColumnType("float");
+
+                    b.Property<float>("Y")
+                        .HasColumnType("float");
+
+                    b.Property<float>("Z")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Vector");
                 });
 
             modelBuilder.Entity("Gta5Platinum.DataAccess.Account.Car", b =>
@@ -610,6 +674,10 @@ namespace Gta5Platinum.DataAccess.Migrations
                     b.HasOne("Gta5Platinum.DataAccess.Account.Character", null)
                         .WithMany("UserVehicles")
                         .HasForeignKey("CharacterId");
+
+                    b.HasOne("Gta5Platinum.DataAccess.Account.Vector", "LastLocation")
+                        .WithMany()
+                        .HasForeignKey("LastLocationId");
                 });
 #pragma warning restore 612, 618
         }

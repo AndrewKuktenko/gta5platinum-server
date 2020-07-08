@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Gta5Platinum.DataAccess.Migrations
 {
-    public partial class platinum : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -59,6 +59,24 @@ namespace Gta5Platinum.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Vector",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    PropertyId = table.Column<int>(nullable: true),
+                    CharacterId = table.Column<int>(nullable: true),
+                    VehicleId = table.Column<int>(nullable: true),
+                    X = table.Column<float>(nullable: false),
+                    Y = table.Column<float>(nullable: false),
+                    Z = table.Column<float>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Vector", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Car",
                 columns: table => new
                 {
@@ -67,16 +85,26 @@ namespace Gta5Platinum.DataAccess.Migrations
                     CharacterId = table.Column<int>(nullable: false),
                     WheelColor = table.Column<int>(nullable: false),
                     EngineStatus = table.Column<bool>(nullable: false),
+                    TyreSmokeColorRed = table.Column<int>(nullable: false),
+                    TyreSmokeColorGreen = table.Column<int>(nullable: false),
+                    TyreSmokeColorBlue = table.Column<int>(nullable: false),
+                    TyreSmokeColorAlpha = table.Column<int>(nullable: false),
+                    PrimaryType = table.Column<int>(nullable: false),
+                    PrimaryColor = table.Column<int>(nullable: false),
+                    SecondaryType = table.Column<int>(nullable: false),
+                    SecondaryColor = table.Column<int>(nullable: false),
                     WindowTint = table.Column<int>(nullable: false),
                     EnginePowerMultiplier = table.Column<float>(nullable: false),
                     EngineTorqueMultiplier = table.Column<float>(nullable: false),
+                    NeonColorRed = table.Column<int>(nullable: false),
+                    NeonColorGreen = table.Column<int>(nullable: false),
+                    NeonColorBlue = table.Column<int>(nullable: false),
+                    NeonColorAlpha = table.Column<int>(nullable: false),
                     DashboardColor = table.Column<int>(nullable: false),
                     WheelType = table.Column<int>(nullable: false),
                     TrimColor = table.Column<int>(nullable: false),
                     Neons = table.Column<bool>(nullable: false),
                     NumberPlateStyle = table.Column<int>(nullable: false),
-                    PrimaryColor = table.Column<int>(nullable: false),
-                    SecondaryColor = table.Column<int>(nullable: false),
                     PearlescentColor = table.Column<int>(nullable: false),
                     Health = table.Column<float>(nullable: false),
                     Livery = table.Column<int>(nullable: false),
@@ -283,39 +311,46 @@ namespace Gta5Platinum.DataAccess.Migrations
                 name: "UserVehicles",
                 columns: table => new
                 {
-                    _id = table.Column<int>(nullable: false)
+                    VehicleId = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    carslot = table.Column<int>(nullable: false),
-                    carmodel = table.Column<string>(nullable: true),
-                    last_rotation = table.Column<float>(nullable: false),
+                    LastLocationId = table.Column<int>(nullable: true),
+                    Carslot = table.Column<int>(nullable: false),
+                    CarModel = table.Column<string>(nullable: true),
+                    LastRotation = table.Column<float>(nullable: false),
                     Color1 = table.Column<int>(nullable: false),
                     Color2 = table.Column<int>(nullable: false),
-                    spoilers = table.Column<int>(nullable: false),
-                    fbumber = table.Column<int>(nullable: false),
-                    rbumber = table.Column<int>(nullable: false),
-                    sskirt = table.Column<int>(nullable: false),
-                    exhaust = table.Column<int>(nullable: false),
-                    frame = table.Column<int>(nullable: false),
-                    grill = table.Column<int>(nullable: false),
-                    roof = table.Column<int>(nullable: false),
-                    motortuning = table.Column<int>(nullable: false),
-                    brakes = table.Column<int>(nullable: false),
-                    transmission = table.Column<int>(nullable: false),
-                    turbo = table.Column<int>(nullable: false),
-                    fwheels = table.Column<int>(nullable: false),
-                    bwheels = table.Column<int>(nullable: false),
-                    window = table.Column<int>(nullable: false),
-                    suspension = table.Column<int>(nullable: false),
+                    Spoilers = table.Column<int>(nullable: false),
+                    FrontBumper = table.Column<int>(nullable: false),
+                    RearBumper = table.Column<int>(nullable: false),
+                    SideSkirt = table.Column<int>(nullable: false),
+                    Exhaust = table.Column<int>(nullable: false),
+                    Frame = table.Column<int>(nullable: false),
+                    Grill = table.Column<int>(nullable: false),
+                    Roof = table.Column<int>(nullable: false),
+                    MotorTuning = table.Column<int>(nullable: false),
+                    Brakes = table.Column<int>(nullable: false),
+                    Transmission = table.Column<int>(nullable: false),
+                    Turbo = table.Column<int>(nullable: false),
+                    FrontWheels = table.Column<int>(nullable: false),
+                    RearWheels = table.Column<int>(nullable: false),
+                    Window = table.Column<int>(nullable: false),
+                    Suspension = table.Column<int>(nullable: false),
                     CharacterId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserVehicles", x => x._id);
+                    table.PrimaryKey("PK_UserVehicles", x => x.VehicleId);
                     table.ForeignKey(
                         name: "FK_UserVehicles_Characters_CharacterId",
                         column: x => x.CharacterId,
                         principalTable: "Characters",
                         principalColumn: "CharacterId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserVehicles_Vector_LastLocationId",
+                        column: x => x.LastLocationId,
+                        principalTable: "Vector",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -381,6 +416,11 @@ namespace Gta5Platinum.DataAccess.Migrations
                 name: "IX_UserVehicles_CharacterId",
                 table: "UserVehicles",
                 column: "CharacterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserVehicles_LastLocationId",
+                table: "UserVehicles",
+                column: "LastLocationId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -411,6 +451,9 @@ namespace Gta5Platinum.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "Characters");
+
+            migrationBuilder.DropTable(
+                name: "Vector");
 
             migrationBuilder.DropTable(
                 name: "Organization");

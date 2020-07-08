@@ -163,7 +163,7 @@ namespace Gta5Platinum.Server.Admin
         }
         [Command("lock")]
         public void LockToogle(Player player)
-        {
+        {            
             var status = NAPI.Vehicle.GetVehicleLocked(player.Vehicle.Handle);
             NAPI.Vehicle.SetVehicleLocked(player.Vehicle.Handle, !status);
         }
