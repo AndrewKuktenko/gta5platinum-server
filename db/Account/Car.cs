@@ -34,8 +34,7 @@ namespace Gta5Platinum.DataAccess.Account
         public int NumberPlateStyle { get; set; }              
         public int PearlescentColor { get; set; }        
         public float Health { get; set; }
-        public int Livery { get; set; }              
-        public bool Siren { get; }
+        public int Livery { get; set; }                    
         public string NumberPlate { get; set; }
         public bool SpecialLight { get; set; }
         public bool CustomTires { get; set; }

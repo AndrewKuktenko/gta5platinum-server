@@ -11,7 +11,7 @@ namespace Gta5Platinum.DataAccess.Account
     public class Property
     {
         [Key]
-        public int PropertyID { get; set; }
+        public int PropertyId { get; set; }
 
         public string Name { get; set; }
         public PropertyType Type { get; set; }
@@ -26,12 +26,8 @@ namespace Gta5Platinum.DataAccess.Account
         [StringLength(48)]
         public string IPL { get; set; }
 
-        public float ExtPosX { get; set; }
-        public float ExtPosY { get; set; }
-        public float ExtPosZ { get; set; }
-        public float IntPosX { get; set; }
-        public float IntPosY { get; set; }
-        public float IntPosZ { get; set; }
+        public Vector ExteriorPosition { get; set; }
+        public Vector InteriorPosition { get; set; }
 
         [DefaultValue(false)]
         public bool Enterable { get; set; }

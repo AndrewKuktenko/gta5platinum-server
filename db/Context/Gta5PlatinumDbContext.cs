@@ -2,6 +2,7 @@
 using Gta5Platinum.DataAccess.Account;
 using Gta5Platinum.DataAccess.Account.UserModels;
 using System.Collections.Generic;
+using Gta5Platinum.DataAccess.Account.OrganizationModels;
 
 namespace Gta5Platinum.DataAccess.Context
 {
@@ -29,6 +30,13 @@ namespace Gta5Platinum.DataAccess.Context
         public DbSet<Inventory> Inventories { get; set; }
         public DbSet<InventoryItem> InventoryItems { get; set; }
         public DbSet<UserVehicle> UserVehicles { get; set; }
+        public DbSet<OrganizationMember> OrganizationMembers { get; set; }
+        public DbSet<CharacterClothes> CharacterClothes { get; set; }
+        public DbSet<CharacterCustomization> CharacterCustomization { get; set; }
+        public DbSet<Organization> Organizations { get; set; }
+        public DbSet<Property> Properties { get; set; }
+        public DbSet<Vector> Vectors { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {            

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Gta5Platinum.DataAccess.Account.UserModels
 {
@@ -7,6 +8,8 @@ namespace Gta5Platinum.DataAccess.Account.UserModels
         
         [Key]
         public int VehicleId { get; set; }
+        [ForeignKey("CharacterId")]
+        public int CharacterId { get; set; }
         public Vector LastLocation { get; set; }
         //public int _cid { get; set; }
         public int Carslot { get; set; }
