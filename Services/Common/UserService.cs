@@ -5,10 +5,12 @@ using Gta5Platinum.DataAccess.UnitOfWork;
 using Gta5Platinum.Server.Client.Authorization;
 using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
+using SocialApp.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Gta5Platinum.Server.Services.Common
 {
@@ -53,7 +55,7 @@ namespace Gta5Platinum.Server.Services.Common
         int SaveChanges();
     }
 
-    public class UserService : IUserService
+    public class UserService
     {
         private readonly Gta5PlatinumUnitOfWork _unitOfWork;
         public UserService()
@@ -61,7 +63,14 @@ namespace Gta5Platinum.Server.Services.Common
             _unitOfWork = new Gta5PlatinumUnitOfWork();
         }
 
-        public int CreateUser(Player player, string email, string login, string password)
+        public async Task<bool> SendMessage(string email)
+        {
+            EmailService emailService = new EmailService();
+            await emailService.SendEmailAsync(email, "Platinum", "Тест письма: тест!");
+            return true;
+        }
+
+        public async Task<int> CreateUser(Player player, string email, string login, string password)
         {           
             User userByLogin = GetSingleUser(u => u.Login == login);
             User userByEmail = GetSingleUser(u => u.Email == email);
@@ -91,7 +100,10 @@ namespace Gta5Platinum.Server.Services.Common
 
                         dbContext.SaveChanges();
 
+                        await SendMessage(email);
+
                         return 1;       // Пользователь успешно зарегестрирован
+                        
                     }
                     catch (Exception) // Ошибка сервера
                     {

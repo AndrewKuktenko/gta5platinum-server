@@ -1,5 +1,6 @@
 ﻿using Gta5Platinum.Server.Services.Common;
 using GTANetworkAPI;
+using System;
 
 namespace Gta5Platinum.Server.Client.Authorization
 {
@@ -14,7 +15,7 @@ namespace Gta5Platinum.Server.Client.Authorization
         [ServerEvent(Event.PlayerConnected)]
         public void OnPlayerConnected(Player player)
         {
-            player.TriggerEvent("loginBrowser");
+            player.TriggerEvent("OnPlayerConnected");
         }
 
         [RemoteEvent("OnPlayerLoginAttempt")]
@@ -46,7 +47,8 @@ namespace Gta5Platinum.Server.Client.Authorization
         [RemoteEvent("OnPlayerRegisterAttempt")]
         public void OnPlayerRegisterAttempt(Player player, string email, string username, string password)
         {           
-            int status = _userService.CreateUser(player, email, username, password);
+            var task = _userService.CreateUser(player, email, username, password);
+            var status = task.Result;
 
             NAPI.Util.ConsoleOutput($"[Registration Attempt] Username {username} | Password: {password}"); //TODO: Заменить на логирование
 

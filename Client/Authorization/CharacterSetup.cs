@@ -15,7 +15,7 @@ namespace Gta5Platinum.Server.player.Authorization
 
                 player.Armor = character.Armour;
                 player.Health = character.Health;
-                player.Name = character.Name;
+                player.Name = character.Name + $"({character.CharacterId})";
                 player.Nametag = character.NameTag;
                 player.Position = new Vector3(character.Xpos, character.Ypos, character.Zpos);
 

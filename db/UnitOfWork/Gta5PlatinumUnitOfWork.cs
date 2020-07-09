@@ -43,11 +43,11 @@ namespace Gta5Platinum.DataAccess.UnitOfWork
             _context.Entry(entity).Collection(navigationProperty).Load();
         }
 
-        public void LoadCollection<TEntity, TElement>(TEntity entity, Expression<Func<TEntity, ICollection<TElement>>> navigationProperty)
+        public void LoadCollection<TEntity, TElement>(TEntity entity, Expression<Func<TEntity, IEnumerable<TElement>>> navigationProperty)
             where TEntity : class
             where TElement : class
         {
-            //_context.Entry(entity).Collection(navigationProperty).Load(); //TODO: Разобраться и исправить
+            _context.Entry(entity).Collection(navigationProperty).Load(); //TODO: Разобраться и исправить
         }
 
         public void LoadReference<TEntity, TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> navigationProperty)

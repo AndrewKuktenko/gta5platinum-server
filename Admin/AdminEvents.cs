@@ -77,8 +77,7 @@ namespace Gta5Platinum.Server.Admin
         public void Carpawn(Player player, string car)
         {                        
             var vehicle = NAPI.Vehicle.CreateVehicle(NAPI.Util.GetHashKey(car), NAPI.Entity.GetEntityPosition(player), 0f, 0, 0);
-            vehicle.SetData("Engine", false);
-
+            vehicle.SetData("Engine", false);            
         }
         [Command("carlocked")]
         public void CarpawnLocked(Player player, string car)
@@ -147,6 +146,7 @@ namespace Gta5Platinum.Server.Admin
         [ServerEvent(Event.PlayerEnterVehicleAttempt)]
         public void OnPlayerEnterVehicle(Player player, Vehicle vehicle, sbyte seatID)
         {
+            vehicle.NumberPlate = "IIOCOCU";
             if (vehicle.GetData<bool>("Engine") == false && player.VehicleSeat == 0)
             {
                 NAPI.Vehicle.SetVehicleEngineStatus(vehicle.Handle, false);
@@ -176,6 +176,19 @@ namespace Gta5Platinum.Server.Admin
             _userService.CreateUser(player, email, login, password);            
 
         }
+        [Command("dim")]
+        public void SetDimention(Player player, uint dimension)
+        {
+            player.Dimension = dimension;            
+
+        }
+        [Command("getdim")]
+        public void getDimention(Player player)
+        {
+            NAPI.Chat.SendChatMessageToPlayer(player, player.Dimension.ToString());
+
+        }
+
 
 
         [RemoteEvent("admChangeWeather")]

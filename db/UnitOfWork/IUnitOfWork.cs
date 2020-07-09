@@ -15,7 +15,7 @@ namespace Gta5Platinum.DataAccess.UnitOfWork
         void LoadCollection<TEntity>(TEntity entity, string navigationProperty)
             where TEntity : class;
 
-        void LoadCollection<TEntity, TElement>(TEntity entity, Expression<Func<TEntity, ICollection<TElement>>> navigationProperty)
+        void LoadCollection<TEntity, TElement>(TEntity entity, Expression<Func<TEntity, IEnumerable<TElement>>> navigationProperty)
             where TElement : class
             where TEntity : class;
 
