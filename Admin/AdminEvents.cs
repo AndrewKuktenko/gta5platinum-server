@@ -5,6 +5,7 @@ using Gta5Platinum.Server.Services.Common;
 /*using Gta5Platinum.Server.Services.Common;
 using Gta5Platinum.Server.Unity.DependencyResolvers;*/
 using GTANetworkAPI;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -74,6 +75,13 @@ namespace Gta5Platinum.Server.Admin
 
         }
 
+        [RemoteEvent("GetUserCharacters")]
+        public JObject SendCharactersToClient(int userId)
+        {
+            var characterService = new CharacterService();
+            return characterService.GetUserCharactersForClient(userId);            
+        }
+        
         [Command("car")]
         public void Carpawn(Player player, string car)
         {                        
