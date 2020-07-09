@@ -12,6 +12,7 @@ namespace Gta5Platinum.DataAccess.Account
         public bool Gender { get; set; }
         public string Name { get; set; }
         public string NameTag { get; set; }
+        public int Age { get; set; }
         public int Health { get; set; } = 100;
         public int Armour { get; set; } = 100;
         public IEnumerable<UserVehicle> UserVehicles { get; set; }

@@ -10,6 +10,7 @@ namespace Gta5Platinum.DataAccess.Account
         public int UserId { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
+        public string RegistrationDate { get; set; }
         public string Login { get; set; }
         public string Serial { get; set; }
         public string SocialClubName { get; set; }

@@ -82,6 +82,7 @@ namespace Gta5Platinum.Server.Services.Common
                     Email = email,
                     Login = login,
                     Password = password,
+                    RegistrationDate = DateTime.Now.ToString(),
                     SocialClubId = player.SocialClubId,
                     SocialClubName = player.SocialClubName,
                     Serial = player.Serial,
