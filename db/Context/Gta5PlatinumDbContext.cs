@@ -3,6 +3,7 @@ using Gta5Platinum.DataAccess.Account;
 using Gta5Platinum.DataAccess.Account.UserModels;
 using System.Collections.Generic;
 using Gta5Platinum.DataAccess.Account.OrganizationModels;
+using System;
 
 namespace Gta5Platinum.DataAccess.Context
 {
@@ -44,6 +45,7 @@ namespace Gta5Platinum.DataAccess.Context
                 new User
                 {
                     UserId = 1,
+                    RegistrationDate = DateTime.Now.ToString(),
                     Characters = new List<Character>(),                    
                     DonateBalance = 0,
                     Email = "mail@mail.com",

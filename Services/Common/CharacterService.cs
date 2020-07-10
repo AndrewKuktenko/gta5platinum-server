@@ -1,5 +1,6 @@
 ﻿using Gta5Platinum.DataAccess.Account;
 using Gta5Platinum.DataAccess.Context;
+using GTANetworkAPI;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
@@ -9,12 +10,12 @@ namespace Gta5Platinum.Server.Services.Common
 {
     public class CharacterService
     {
-        public List<Character> GetUserCharacters(int userId)
+        public List<Character> GetUserCharacters(Player player)
         {
             using (var dbContext = new Gta5PlatinumDbContext())
             {
                 List<Character> userCharacters = dbContext.Users
-                    .Where(c => c.UserId == userId)
+                    .Where(c => c.UserId == player.GetData<int>("UserId"))
                     .SelectMany(u => u.Characters)
                     .ToList();
                     
@@ -22,20 +23,14 @@ namespace Gta5Platinum.Server.Services.Common
             }
         }
 
-        public JObject GetUserCharactersForClient(int userId)
+        public JObject GetUserCharactersForClient(Player player)
         {
-            using (var dbContext = new Gta5PlatinumDbContext())
-            {
-                List<Character> userCharacters = dbContext.Users
-                    .Where(c => c.UserId == userId)
-                    .SelectMany(u => u.Characters)
-                    .ToList();                
-                
-                return JObject.FromObject(userCharacters);
-            }
-        }
+            var userCharacters = GetUserCharacters(player);
 
-        public Character GetUserCharactersFromClient(JObject json)
+            return JObject.FromObject(userCharacters);          
+        }        
+
+        public Character GetUserCharacterFromClient(JObject json)
         {
             var character = JsonConvert.DeserializeObject<Character>(json.ToString());
 

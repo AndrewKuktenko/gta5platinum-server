@@ -1,13 +1,27 @@
 ﻿using Gta5Platinum.DataAccess.Account;
 using Gta5Platinum.DataAccess.Context;
+using Gta5Platinum.Server.Services.Common;
 using GTANetworkAPI;
+using Newtonsoft.Json.Linq;
 using System.Linq;
 
 namespace Gta5Platinum.Server.player.Authorization
 {
     public class CharacterSetup
     {
-        public void LoadCharacterOnSpawn(Player player, int characterId)
+        public void TestLoadCharacterOnSpawn(Player player, JObject characterJson)
+        {
+            CharacterService characterService = new CharacterService();
+
+            var character = characterService.GetUserCharacterFromClient(characterJson);
+
+            player.SetData<int>("CharacterId", character.CharacterId);
+            player.Armor = character.Armour;
+            player.Health = character.Health;
+            player.Name = character.Name + $"({character.CharacterId})";            
+            
+        }
+        /*public void LoadCharacterOnSpawn(Player player, int characterId)
         {
             using (var dbContext = new Gta5PlatinumDbContext())
             {
@@ -17,7 +31,7 @@ namespace Gta5Platinum.Server.player.Authorization
                 player.Health = character.Health;
                 player.Name = character.Name + $"({character.CharacterId})";
                 player.Nametag = character.NameTag;
-                player.Position = new Vector3(character.Xpos, character.Ypos, character.Zpos);
+                player.Position = new Vector3(character.LastPosition.X, character.LastPosition.Y, character.LastPosition.Z);
 
                 //player.SetCustomization(character.Gender, GetCharacterHeadBlend(character), character.HeadBlend.EyeColor, character.HeadBlend.HairColor, character.HeadBlend.HighlightColor, new Dictionary<int, HeadOverlay>(), new Decoration[] { new Decoration() { Collection = 0, Overlay = 0} });
 
@@ -25,6 +39,31 @@ namespace Gta5Platinum.Server.player.Authorization
                 SetClothesOnSpawn(player, character);         
             }            
             
+        }*/
+
+        /// <summary>
+        /// загрузка персонажа после его выбора
+        /// </summary>
+        /// <returns>void</returns>
+        public void LoadCharacterOnSpawn(Player player, JObject characterJson)
+        {
+            CharacterService characterService = new CharacterService();           
+            
+            var character = characterService.GetUserCharacterFromClient(characterJson);
+
+            player.SetData<int>("CharacterId", character.CharacterId);
+            player.Armor = character.Armour;
+            player.Health = character.Health;
+            player.Name = character.Name + $"({character.CharacterId})";
+            player.Nametag = character.NameTag;
+            player.Position = new Vector3(character.LastPosition.X, character.LastPosition.Y, character.LastPosition.Z);
+
+            //player.SetCustomization(character.Gender, GetCharacterHeadBlend(character), character.HeadBlend.EyeColor, character.HeadBlend.HairColor, character.HeadBlend.HighlightColor, new Dictionary<int, HeadOverlay>(), new Decoration[] { new Decoration() { Collection = 0, Overlay = 0} });
+
+            NAPI.Player.SetPlayerHeadBlend(player, GetCharacterHeadBlend(character));
+            SetClothesOnSpawn(player, character);
+            
+
         }
 
         public void SetClothesOnSpawn(Player player, Character character)
@@ -41,7 +80,10 @@ namespace Gta5Platinum.Server.player.Authorization
             player.SetClothes(10, character.Clothes.clothes_10, 0);
             player.SetClothes(11, character.Clothes.clothes_11, 0);
         }
-
+        /// <summary>
+        /// загрузка черт лицы персонажа
+        /// </summary>
+        /// <returns>HeadBlend</returns>
         public HeadBlend GetCharacterHeadBlend(Character character)
         {
             return new HeadBlend()

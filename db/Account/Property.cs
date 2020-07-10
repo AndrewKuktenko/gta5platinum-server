@@ -27,7 +27,9 @@ namespace Gta5Platinum.DataAccess.Account
         public string IPL { get; set; }
 
         public Vector ExteriorPosition { get; set; }
-        public Vector InteriorPosition { get; set; }
+        public float InteriorPositionX { get; set; }
+        public float InteriorPositionY { get; set; }
+        public float InteriorPositionZ { get; set; }
 
         [DefaultValue(false)]
         public bool Enterable { get; set; }

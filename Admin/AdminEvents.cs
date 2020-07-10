@@ -76,10 +76,10 @@ namespace Gta5Platinum.Server.Admin
         }
 
         [RemoteEvent("GetUserCharacters")]
-        public JObject SendCharactersToClient(int userId)
+        public JObject SendCharactersToClient(Player player)
         {
             var characterService = new CharacterService();
-            return characterService.GetUserCharactersForClient(userId);            
+            return characterService.GetUserCharactersForClient(player);            
         }
         
         [Command("car")]
@@ -151,17 +151,7 @@ namespace Gta5Platinum.Server.Admin
             NAPI.Chat.SendChatMessageToPlayer(player, "GPS [X: " + PlayerPos.X + " Y: " + PlayerPos.Y + " Z: " + PlayerPos.Z + "]");
         }
 
-        [ServerEvent(Event.PlayerEnterVehicleAttempt)]
-        public void OnPlayerEnterVehicle(Player player, Vehicle vehicle, sbyte seatID)
-        {
-            vehicle.NumberPlate = "IIOCOCU";
-            if (vehicle.GetData<bool>("Engine") == false && player.VehicleSeat == 0)
-            {
-                NAPI.Vehicle.SetVehicleEngineStatus(vehicle.Handle, false);
-                NAPI.Vehicle.SetVehicleEngineStatus(vehicle.Handle, true);
-                NAPI.Vehicle.SetVehicleEngineStatus(vehicle.Handle, false);
-            }            
-        }
+        
 
         [Command("engine")]
         public void EngineToogle(Player player)
