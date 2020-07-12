@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using VehicleSync;
 
 namespace Gta5Platinum.Server.Admin
 {
@@ -28,6 +29,14 @@ namespace Gta5Platinum.Server.Admin
             int pInfo = player.GetData<int>("ID");
             int aInfo = player.Id;
             NAPI.Chat.SendChatMessageToPlayer(player, $"Data{pInfo} Id{aInfo}");
+        }
+
+        [Command("wp")]
+        public void GetWeapons(Player player, string weapon)
+        {
+
+            player.GiveWeapon((WeaponHash)NAPI.Util.GetHashKey(weapon), 9999);
+                
         }
 
         [Command("voice")]
@@ -85,8 +94,9 @@ namespace Gta5Platinum.Server.Admin
         [Command("car")]
         public void Carpawn(Player player, string car)
         {                        
-            var vehicle = NAPI.Vehicle.CreateVehicle(NAPI.Util.GetHashKey(car), NAPI.Entity.GetEntityPosition(player), 0f, 0, 0);
-            vehicle.SetData("Engine", false);                  
+            var vehicle = NAPI.Vehicle.CreateVehicle(NAPI.Util.GetHashKey(car), player.Position.Around(5), 0f, 0, 0);
+            //vehicle.SetData("VehicleSyncData", new VehicleStreaming.VehicleSyncData());
+            
         }
         [Command("carlocked")]
         public void CarpawnLocked(Player player, string car)
