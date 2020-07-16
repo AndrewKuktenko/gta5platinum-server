@@ -15,12 +15,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Events\Server\VehicleEvents.cs" />
+    <Compile Remove="Events\Server\VehicleSync — копия.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="VehicleSync.rar" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.0.0" />
-    <PackageReference Include="gtanetwork.api" Version="1.1.0-DP1-2" />
     <PackageReference Include="MailKit" Version="2.7.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.5">
@@ -38,6 +42,12 @@
 
   <ItemGroup>
     <ProjectReference Include="db\Gta5Platinum.DataAccess.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Bootstrapper">
+      <HintPath>..\..\runtime\Bootstrapper.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

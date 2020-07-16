@@ -1,4 +1,5 @@
-﻿using Gta5Platinum.Server.Services.Common;
+﻿using Gta5Platinum.Server.Events.Client.CharacterSelector;
+using Gta5Platinum.Server.Services.Common;
 using GTANetworkAPI;
 using System;
 
@@ -28,7 +29,7 @@ namespace Gta5Platinum.Server.Client.Authorization
             if (loginInfo.Status == 1) // Успешный вход
             {
                 player.SetData<int>("UserId", (int)loginInfo.UserId);
-                player.TriggerEvent("LoginResult", 1);
+                player.TriggerEvent("LoginResult", 1);                
             }
             else if (loginInfo.Status == 2) // Неверный пароль
             { 

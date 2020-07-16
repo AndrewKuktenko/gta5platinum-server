@@ -7,8 +7,8 @@ using Newtonsoft.Json.Linq;
 
 //Things to note
 //More things like vehicle mods will be added in the next version
-/*
-API FUNCTIONS:
+
+/* API FUNCTIONS:
 public static void SetVehicleWindowState(Vehicle veh, WindowID window, WindowState state)
 public static WindowState GetVehicleWindowState(Vehicle veh, WindowID window)
 public static void SetVehicleWheelState(Vehicle veh, WheelID wheel, WheelState state)
@@ -21,9 +21,9 @@ public static void SetEngineState(Vehicle veh, bool status)
 public static bool GetEngineState(Vehicle veh)
 public static void SetLockStatus(Vehicle veh, bool status)
 public static bool GetLockState(Vehicle veh)
-
 */
-namespace VehicleSync
+
+namespace Gta5Platinum.Server.Events.Server
 {
     //Enums for ease of use
     public enum WindowID
@@ -53,8 +53,9 @@ namespace VehicleSync
 
     public enum DoorState
     {
-        DoorClosed,        
-        DoorBroken
+        DoorClosed,
+        DoorOpen,
+        DoorBroken,
     }
 
     public enum WheelID
@@ -75,7 +76,7 @@ namespace VehicleSync
     {
         WheelFixed,
         WheelBurst,
-        WheelOnRim
+        WheelOnRim,
     }
 
     public class VehicleStreaming : Script
@@ -83,6 +84,7 @@ namespace VehicleSync
         //This is the data object which will be synced to vehicles
         public class VehicleSyncData
         {
+            //public int CarId { get; set; } = 0;
             //Used to bypass some streaming bugs
             public Vector3 Position { get; set; } = new Vector3();
             public Vector3 Rotation { get; set; } = new Vector3();
@@ -105,8 +107,33 @@ namespace VehicleSync
             //Wheels 0-7, 45/47 (0 = fixed, 1 = flat, 2 = missing) (This uses enums so don't worry about it)
             public int[] Wheel { get; set; } = new int[10] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         }
+        [Command("car")]
+        public void CarSpawn(Player player, string car, int carId)
+        {
+            var vehicle = NAPI.Vehicle.CreateVehicle(NAPI.Util.GetHashKey(car), player.Position.Around(5), 0f, 0, 0, "TU PIDOR");
+            //VehicleSyncData data = new VehicleSyncData();
+            //data.CarId = carId;
+            //NAPI.Data.SetEntitySharedData(vehicle, "VehicleSyncData", data);
+            //vehicle.SetSharedData("VehicleSyncData", data);
+            //vehicle.SetData("VehicleSyncData", new VehicleStreaming.VehicleSyncData());
+
+        }
 
         //API functions for people to use
+        [Command("tengine")]
+        public void EngineToggle(Player player)
+        {
+            VehicleSyncData data = GetVehicleSyncData(player.Vehicle);
+            if (data == default(VehicleSyncData))
+                data = new VehicleSyncData();
+
+            data.Engine = !data.Engine;
+
+            UpdateVehicleSyncData(player.Vehicle, NAPI.Util.ToJson(data));
+
+            NAPI.ClientEvent.TriggerClientEventInDimension(player.Vehicle.Dimension, "ToggleEngine", player.Vehicle.Handle, data.Engine);           
+
+        }
         public static void SetVehicleWindowState(Vehicle veh, WindowID window, WindowState state)
         {
             VehicleSyncData data = GetVehicleSyncData(veh);
@@ -114,7 +141,7 @@ namespace VehicleSync
                 data = new VehicleSyncData();
 
             data.Window[(int)window] = (int)state;
-            UpdateVehicleSyncData(veh, data);
+            UpdateVehicleSyncData(veh, NAPI.Util.ToJson(data));
             NAPI.ClientEvent.TriggerClientEventInDimension(veh.Dimension, "VehStream_SetVehicleWindowStatus_Single", veh.Handle, (int)window, (int)state);
         }
 
@@ -124,7 +151,7 @@ namespace VehicleSync
             if (data == default(VehicleSyncData))
             {
                 data = new VehicleSyncData();
-                UpdateVehicleSyncData(veh, data);
+                UpdateVehicleSyncData(veh, NAPI.Util.ToJson(data));
             }
             return (WindowState)data.Window[(int)window];
         }
@@ -136,7 +163,7 @@ namespace VehicleSync
                 data = new VehicleSyncData();
 
             data.Wheel[(int)wheel] = (int)state;
-            UpdateVehicleSyncData(veh, data);
+            UpdateVehicleSyncData(veh, NAPI.Util.ToJson(data));
             NAPI.ClientEvent.TriggerClientEventInDimension(veh.Dimension, "VehStream_SetVehicleWheelStatus_Single", veh.Handle, (int)wheel, (int)state);
         }
 
@@ -146,7 +173,7 @@ namespace VehicleSync
             if (data == default(VehicleSyncData))
             {
                 data = new VehicleSyncData();
-                UpdateVehicleSyncData(veh, data);
+                UpdateVehicleSyncData(veh, NAPI.Util.ToJson(data));
             }
             return (WheelState)data.Wheel[(int)wheel];
         }
@@ -158,7 +185,7 @@ namespace VehicleSync
                 data = new VehicleSyncData();
 
             data.Dirt = dirt;
-            UpdateVehicleSyncData(veh, data);
+            UpdateVehicleSyncData(veh, NAPI.Util.ToJson(data));
             NAPI.ClientEvent.TriggerClientEventInDimension(veh.Dimension, "VehStream_SetVehicleDirtLevel", veh.Handle, dirt);
         }
 
@@ -168,7 +195,7 @@ namespace VehicleSync
             if (data == default(VehicleSyncData))
             {
                 data = new VehicleSyncData();
-                UpdateVehicleSyncData(veh, data);
+                UpdateVehicleSyncData(veh, NAPI.Util.ToJson(data));
             }
             return data.Dirt;
         }
@@ -180,7 +207,7 @@ namespace VehicleSync
                 data = new VehicleSyncData();
 
             data.Door[(int)door] = (int)state;
-            UpdateVehicleSyncData(veh, data);
+            UpdateVehicleSyncData(veh, NAPI.Util.ToJson(data));
             NAPI.ClientEvent.TriggerClientEventInDimension(veh.Dimension, "VehStream_SetVehicleDoorStatus_Single", veh, (int)door, (int)state);
         }
 
@@ -190,21 +217,20 @@ namespace VehicleSync
             if (data == default(VehicleSyncData))
             {
                 data = new VehicleSyncData();
-                UpdateVehicleSyncData(veh, data);
+                UpdateVehicleSyncData(veh, NAPI.Util.ToJson(data));
             }
             return (DoorState)data.Door[(int)door];
         }
 
-        [Command("tengine")]
-        public static void SetEngineState(Player player)
+        public static void SetEngineState(Vehicle veh, bool status)
         {
-            VehicleSyncData data = GetVehicleSyncData(player.Vehicle);
+            VehicleSyncData data = GetVehicleSyncData(veh);
             if (data == default(VehicleSyncData))
                 data = new VehicleSyncData();
 
-            //data.Engine;
-            UpdateVehicleSyncData(player.Vehicle, data);
-            NAPI.ClientEvent.TriggerClientEventInDimension(player.Vehicle.Dimension, "VehStream_SetEngineStatus", player.Vehicle);
+            data.Engine = status;
+            UpdateVehicleSyncData(veh, NAPI.Util.ToJson(data));
+            NAPI.ClientEvent.TriggerClientEventInDimension(veh.Dimension, "VehStream_SetEngineStatus", veh, status);
         }
 
         public static bool GetEngineState(Vehicle veh)
@@ -213,7 +239,7 @@ namespace VehicleSync
             if (data == default(VehicleSyncData))
             {
                 data = new VehicleSyncData();
-                UpdateVehicleSyncData(veh, data);
+                UpdateVehicleSyncData(veh, NAPI.Util.ToJson(data));
             }
             return data.Engine;
         }
@@ -225,7 +251,7 @@ namespace VehicleSync
                 data = new VehicleSyncData();
 
             data.Locked = status;
-            UpdateVehicleSyncData(veh, data);
+            UpdateVehicleSyncData(veh, NAPI.Util.ToJson(data));
             NAPI.ClientEvent.TriggerClientEventInDimension(veh.Dimension, "VehStream_SetLockStatus", veh, status);
         }
 
@@ -235,7 +261,7 @@ namespace VehicleSync
             if (data == default(VehicleSyncData))
             {
                 data = new VehicleSyncData();
-                UpdateVehicleSyncData(veh, data);
+                UpdateVehicleSyncData(veh, NAPI.Util.ToJson(data));
             }
             return data.Locked;
         }
@@ -247,10 +273,12 @@ namespace VehicleSync
             {
                 if (NAPI.Entity.DoesEntityExist(veh))
                 {
-                    if (veh.HasData("VehicleSyncData"))
+                    if (veh.HasSharedData("VehicleSyncData"))
                     {
-
-                        return veh.GetData<VehicleSyncData>("VehicleSyncData");
+                        //API converts class objects to JObject so we have to change it back
+                        JObject obj = (JObject)NAPI.Data.GetEntitySharedData(veh, "VehicleSyncData");
+                        //return veh.GetSharedData<VehicleSyncData>("VehicleSyncData");
+                        return obj.ToObject<VehicleSyncData>();
                     }
                 }
             }
@@ -259,7 +287,7 @@ namespace VehicleSync
         }
 
         //Used internally only but publicly available in case any of you need it
-        public static bool UpdateVehicleSyncData(Vehicle veh, VehicleSyncData data)
+        public static bool UpdateVehicleSyncData(Vehicle veh, string data)
         {
             if (veh != null)
             {
@@ -267,9 +295,10 @@ namespace VehicleSync
                 {
                     if (data != null)
                     {
-                        data.Position = veh.Position;
-                        data.Rotation = veh.Rotation;
-                        veh.SetData("VehicleSyncData", data);
+                        VehicleSyncData dataObj = NAPI.Util.FromJson<VehicleSyncData>(data);
+                        dataObj.Position = veh.Position;
+                        dataObj.Rotation = veh.Rotation;
+                        NAPI.Data.SetEntitySharedData(veh, "VehicleSyncData", data);
                         return true;
                     }
                 }
@@ -277,7 +306,7 @@ namespace VehicleSync
             return false;
         }
 
-        //Called from the Player to sync dirt level
+        //Called from the client to sync dirt level
         [RemoteEvent("VehStream_SetDirtLevel")]
         public void VehStreamSetDirtLevel(Player player, Vehicle veh, float dirt)
         {
@@ -287,13 +316,13 @@ namespace VehicleSync
 
             data.Dirt = dirt;
 
-            UpdateVehicleSyncData(veh, data);
+            UpdateVehicleSyncData(veh, NAPI.Util.ToJson(data));
 
             //Re-distribute the goods
             NAPI.ClientEvent.TriggerClientEventInDimension(veh.Dimension, "VehStream_SetVehicleDirtLevel", veh.Handle, dirt);
         }
 
-        //Called from the Player to sync door data
+        //Called from the client to sync door data
         [RemoteEvent("VehStream_SetDoorData")]
         public void VehStreamSetDoorData(Player player, Vehicle veh, int door1state, int door2state, int door3state, int door4state, int door5state, int door6state, int door7state, int door8state)
         {
@@ -310,13 +339,13 @@ namespace VehicleSync
             data.Door[6] = door7state;
             data.Door[7] = door8state;
 
-            UpdateVehicleSyncData(veh, data);
+            UpdateVehicleSyncData(veh, NAPI.Util.ToJson(data));
 
             //Re-distribute the goods
             NAPI.ClientEvent.TriggerClientEventInDimension(veh.Dimension, "VehStream_SetVehicleDoorStatus", veh.Handle, door1state, door2state, door3state, door4state, door5state, door6state, door7state, door8state);
         }
 
-        //Called from the Player to sync window data
+        //Called from the client to sync window data
         [RemoteEvent("VehStream_SetWindowData")]
         public void VehStreamSetWindowData(Player player, Vehicle veh, int window1state, int window2state, int window3state, int window4state)
         {
@@ -329,13 +358,13 @@ namespace VehicleSync
             data.Window[2] = window3state;
             data.Window[3] = window4state;
 
-            UpdateVehicleSyncData(veh, data);
+            UpdateVehicleSyncData(veh, NAPI.Util.ToJson(data));
 
             //Re-distribute the goods
             NAPI.ClientEvent.TriggerClientEventInDimension(veh.Dimension, "VehStream_SetVehicleWindowStatus", veh.Handle, window1state, window2state, window3state, window4state);
         }
 
-        //Called from the Player to sync wheel data
+        //Called from the client to sync wheel data
         [RemoteEvent("VehStream_SetWheelData")]
         public void VehStreamSetWheelData(Player player, Vehicle veh, int wheel1state, int wheel2state, int wheel3state, int wheel4state, int wheel5state, int wheel6state, int wheel7state, int wheel8state, int wheel9state, int wheel10state)
         {
@@ -353,7 +382,7 @@ namespace VehicleSync
             data.Wheel[7] = wheel8state;
             data.Wheel[8] = wheel9state;
             data.Wheel[9] = wheel10state;
-            UpdateVehicleSyncData(veh, data);
+            UpdateVehicleSyncData(veh, NAPI.Util.ToJson(data));
 
             //Re-distribute the goods
             NAPI.ClientEvent.TriggerClientEventInDimension(veh.Dimension, "VehStream_SetVehicleWheelStatus", veh.Handle, wheel1state, wheel2state, wheel3state, wheel4state, wheel5state, wheel6state, wheel7state, wheel8state, wheel9state, wheel10state);
@@ -367,7 +396,7 @@ namespace VehicleSync
             if (data == default(VehicleSyncData))
                 data = new VehicleSyncData();
 
-            UpdateVehicleSyncData(veh, data);
+            UpdateVehicleSyncData(veh, NAPI.Util.ToJson(data));
             NAPI.ClientEvent.TriggerClientEvent(player, "VehStream_PlayerEnterVehicleAttempt", veh, seat);
         }
 
@@ -381,9 +410,8 @@ namespace VehicleSync
             data.Position = veh.Position;
             data.Rotation = veh.Rotation;
 
-            UpdateVehicleSyncData(veh, data);
-            JObject json = JObject.FromObject(data);
-            NAPI.ClientEvent.TriggerClientEvent(player, "VehStream_PlayerExitVehicleAttempt", veh, json);
+            UpdateVehicleSyncData(veh, NAPI.Util.ToJson(data));
+            NAPI.ClientEvent.TriggerClientEvent(player, "VehStream_PlayerExitVehicleAttempt", veh);
         }
 
         [ServerEvent(Event.PlayerExitVehicle)]
@@ -396,7 +424,7 @@ namespace VehicleSync
             data.Position = veh.Position;
             data.Rotation = veh.Rotation;
 
-            UpdateVehicleSyncData(veh, data);
+            UpdateVehicleSyncData(veh, NAPI.Util.ToJson(data));
             NAPI.ClientEvent.TriggerClientEvent(player, "VehStream_PlayerExitVehicle", veh);
         }
 
@@ -407,7 +435,7 @@ namespace VehicleSync
             if (data == default(VehicleSyncData))
                 data = new VehicleSyncData();
 
-            UpdateVehicleSyncData(veh, data);
+            UpdateVehicleSyncData(veh, NAPI.Util.ToJson(data));
             NAPI.ClientEvent.TriggerClientEvent(player, "VehStream_PlayerEnterVehicle", veh, seat);
         }
 
@@ -421,7 +449,7 @@ namespace VehicleSync
             data.BodyHealth -= bodyHealthLoss;
             data.EngineHealth -= engineHealthLoss;
 
-            UpdateVehicleSyncData(veh, data);
+            UpdateVehicleSyncData(veh, NAPI.Util.ToJson(data));
 
             if (NAPI.Vehicle.GetVehicleDriver(veh) != default(Player)) //Doesn't work?
                 NAPI.ClientEvent.TriggerClientEvent((Player)NAPI.Vehicle.GetVehicleDriver(veh), "VehStream_PlayerExitVehicleAttempt", veh);
@@ -436,9 +464,9 @@ namespace VehicleSync
 
             data.Door[index] = 2;
 
-            UpdateVehicleSyncData(veh, data);
+            UpdateVehicleSyncData(veh, NAPI.Util.ToJson(data));
 
-            NAPI.ClientEvent.TriggerClientEventInDimension(veh.Dimension, "VehStream_SetVehicleDoorStatus", veh, data.Door[0], data.Door[1], data.Door[2], data.Door[3], data.Door[4], data.Door[5], data.Door[6], data.Door[7]);
+            NAPI.ClientEvent.TriggerClientEventInDimension(veh.Dimension, "VehStream_SetVehicleDoorStatus", veh.Handle, data.Door[0], data.Door[1], data.Door[2], data.Door[3], data.Door[4], data.Door[5], data.Door[6], data.Door[7]);
         }
     }
 }

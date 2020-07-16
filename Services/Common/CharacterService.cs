@@ -27,7 +27,7 @@ namespace Gta5Platinum.Server.Services.Common
         {
             var userCharacters = GetUserCharacters(player);
 
-            return JObject.FromObject(userCharacters);          
+            return (JObject)JToken.FromObject(userCharacters);          
         }        
 
         public Character GetUserCharacterFromClient(JObject json)

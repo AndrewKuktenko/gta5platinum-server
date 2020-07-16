@@ -10,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using VehicleSync;
+
 
 namespace Gta5Platinum.Server.Admin
 {
@@ -84,19 +84,19 @@ namespace Gta5Platinum.Server.Admin
 
         }
 
-        [RemoteEvent("GetUserCharacters")]
+        /*[RemoteEvent("GetUserCharacters")]
         public JObject SendCharactersToClient(Player player)
         {
             var characterService = new CharacterService();
             return characterService.GetUserCharactersForClient(player);            
-        }
-        
-        [Command("car")]
-        public void Carpawn(Player player, string car)
-        {                        
-            var vehicle = NAPI.Vehicle.CreateVehicle(NAPI.Util.GetHashKey(car), player.Position.Around(5), 0f, 0, 0);
-            //vehicle.SetData("VehicleSyncData", new VehicleStreaming.VehicleSyncData());
-            
+        }*/
+
+        [Command("time")]
+        public void AdminEvent_admChangeTime(Player player, int hour)
+        {
+
+            NAPI.World.SetTime(hour, 0, 0);
+            NAPI.Notification.SendNotificationToPlayer(player, "~g~Время изменено: " + hour, true);
         }
         [Command("carlocked")]
         public void CarpawnLocked(Player player, string car)
@@ -199,22 +199,16 @@ namespace Gta5Platinum.Server.Admin
 
 
 
-        [RemoteEvent("admChangeWeather")]
-        public void AdminEvent_admChangeWeather(Player player, string select)
-        {
-            NAPI.World.SetWeather(select);
+        [Command("admChangeWeather")]
+        public void AdminEvent_admChangeWeather(Player player, Weather weather)
+        {            
+            NAPI.World.SetWeather(weather);
             NAPI.Notification.SendNotificationToPlayer(player, "Погода изменилась", true);
         }
 
-        [RemoteEvent("admChangeTime")]
-        public void AdminEvent_admChangeTime(Player player, string hour)
-        {
-            int new_hour = Convert.ToInt32(hour);
-            NAPI.World.SetTime(new_hour, 0, 0);
-            NAPI.Notification.SendNotificationToPlayer(player, "~g~Время изменено: " + new_hour, true);
-        }
+        
 
-        [RemoteEvent("admChangeSkin")]
+        [Command("admChangeSkin")]
         public void AdminEvent_admChangeSkin(Player player, uint model)
         {
             NAPI.Player.SetPlayerSkin(player, model);
