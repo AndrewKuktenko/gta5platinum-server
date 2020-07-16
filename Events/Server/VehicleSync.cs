@@ -84,7 +84,7 @@ namespace Gta5Platinum.Server.Events.Server
         //This is the data object which will be synced to vehicles
         public class VehicleSyncData
         {
-            //public int CarId { get; set; } = 0;
+            public int CarId { get; set; } = 0;
             //Used to bypass some streaming bugs
             public Vector3 Position { get; set; } = new Vector3();
             public Vector3 Rotation { get; set; } = new Vector3();
@@ -111,6 +111,12 @@ namespace Gta5Platinum.Server.Events.Server
         public void CarSpawn(Player player, string car, int carId)
         {
             var vehicle = NAPI.Vehicle.CreateVehicle(NAPI.Util.GetHashKey(car), player.Position.Around(5), 0f, 0, 0, "TU PIDOR");
+            
+                VehicleSyncData data = new VehicleSyncData();
+                data.CarId = carId;
+                
+                UpdateVehicleSyncData(vehicle, data);
+            
             //VehicleSyncData data = new VehicleSyncData();
             //data.CarId = carId;
             //NAPI.Data.SetEntitySharedData(vehicle, "VehicleSyncData", data);
@@ -125,9 +131,7 @@ namespace Gta5Platinum.Server.Events.Server
         {
             VehicleSyncData data = GetVehicleSyncData(player.Vehicle);
             if (data == default(VehicleSyncData))
-                data = new VehicleSyncData();
-
-            data.Engine = !data.Engine;
+                data = new VehicleSyncData();            
 
             //UpdateVehicleSyncData(player.Vehicle, data);
 
@@ -141,11 +145,13 @@ namespace Gta5Platinum.Server.Events.Server
             if (data == default(VehicleSyncData))
                 data = new VehicleSyncData();
 
+            
+
+            NAPI.ClientEvent.TriggerClientEventInDimension(player.Vehicle.Dimension, "ToggleEngine", player.Vehicle.Handle, data.Engine);
+
             data.Engine = !data.Engine;
 
             UpdateVehicleSyncData(player.Vehicle, data);
-
-            NAPI.ClientEvent.TriggerClientEventInDimension(player.Vehicle.Dimension, "ToggleEngine", player.Vehicle.Handle, data.Engine);           
 
         }
         public static void SetVehicleWindowState(Vehicle veh, WindowID window, WindowState state)

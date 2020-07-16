@@ -73,21 +73,8 @@ namespace Gta5Platinum.Server.Admin
                     localplayer.clearTasks();
             });*/
 
-        }
-
-        [RemoteEvent("GetUserCharacters")]
-        public string SendCharactersToClient(Player player)
-        {
-            var characterService = new CharacterService();
-            return characterService.GetUserCharactersForClient(player);            
-        }
+        }            
         
-        [Command("car")]
-        public void Carpawn(Player player, string car)
-        {                        
-            var vehicle = NAPI.Vehicle.CreateVehicle(NAPI.Util.GetHashKey(car), NAPI.Entity.GetEntityPosition(player), 0f, 0, 0);
-            vehicle.SetData("Engine", false);                  
-        }
         [Command("carlocked")]
         public void CarpawnLocked(Player player, string car)
         {
