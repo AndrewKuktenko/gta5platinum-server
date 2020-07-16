@@ -6,7 +6,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gta5Platinum.Server", "Gta5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gta5Platinum.DataAccess", "db\Gta5Platinum.DataAccess.csproj", "{248CC820-BB7C-4DE5-9289-4C96BB85736C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gta5Platinum.Client", "..\..\..\gta5platunim-client\Gta5Platinum.Client.csproj", "{902CC00E-5C92-48F5-B5B6-1C5C809F30D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gta5Platinum.Client", "..\..\..\gta5platinum-client\Gta5Platinum.Client.csproj", "{902CC00E-5C92-48F5-B5B6-1C5C809F30D2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

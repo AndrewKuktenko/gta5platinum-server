@@ -23,11 +23,11 @@ namespace Gta5Platinum.Server.Services.Common
             }
         }
 
-        public JObject GetUserCharactersForClient(Player player)
+        public string GetUserCharactersForClient(Player player)
         {
             var userCharacters = GetUserCharacters(player);
 
-            return JObject.FromObject(userCharacters);          
+            return JsonConvert.SerializeObject(userCharacters);          
         }        
 
         public Character GetUserCharacterFromClient(JObject json)

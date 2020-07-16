@@ -76,7 +76,7 @@ namespace Gta5Platinum.Server.Admin
         }
 
         [RemoteEvent("GetUserCharacters")]
-        public JObject SendCharactersToClient(Player player)
+        public string SendCharactersToClient(Player player)
         {
             var characterService = new CharacterService();
             return characterService.GetUserCharactersForClient(player);            

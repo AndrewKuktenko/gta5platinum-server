@@ -12,7 +12,7 @@ namespace Gta5Platinum.Server.Events.Client.CharacterSelector
         /// </summary>
         /// <returns>JObject</returns>
         [RemoteEvent("GetUserCharacters")]
-        public JObject GetUserCharacters(Player player)
+        public string GetUserCharacters(Player player)
         {
             CharacterService characterService = new CharacterService();
 
