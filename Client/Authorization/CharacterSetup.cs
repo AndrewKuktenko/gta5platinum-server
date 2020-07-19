@@ -56,7 +56,7 @@ namespace Gta5Platinum.Server.player.Authorization
             player.Health = character.Health;
             player.Name = character.Name + $"({character.CharacterId})";
             player.Nametag = character.NameTag;
-            player.Position = new Vector3(character.LastPosition.X, character.LastPosition.Y, character.LastPosition.Z);
+            player.Position = new Vector3(character.LastX, character.LastY, character.LastZ);
 
             //player.SetCustomization(character.Gender, GetCharacterHeadBlend(character), character.HeadBlend.EyeColor, character.HeadBlend.HairColor, character.HeadBlend.HighlightColor, new Dictionary<int, HeadOverlay>(), new Decoration[] { new Decoration() { Collection = 0, Overlay = 0} });
 

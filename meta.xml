@@ -1,4 +1,4 @@
 <meta>
     <info name="AdminEvents" type="gamemode" />
-    <script src="bin/Release/netcoreapp3.1/Gta5Platinum.Server.dll" />
+    <script src="bin/Debug/netcoreapp3.1/Gta5Platinum.Server.dll" />
 </meta>

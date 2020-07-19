@@ -10,7 +10,9 @@ namespace Gta5Platinum.DataAccess.Account.UserModels
         public int VehicleId { get; set; }
         [ForeignKey("CharacterId")]
         public int CharacterId { get; set; }
-        public Vector LastLocation { get; set; }
+        public float LastX { get; set; }
+        public float LastY { get; set; }
+        public float LastZ { get; set; }
         //public int _cid { get; set; }
         public int Carslot { get; set; }
         public string CarModel { get; set; }

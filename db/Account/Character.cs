@@ -26,7 +26,9 @@ namespace Gta5Platinum.DataAccess.Account
         public User User { get; set; }
         public int jail { get; set; }
         public int jailtime { get; set; }
-        public Vector LastPosition { get; set; }
+        public float LastX { get; set; }
+        public float LastY { get; set; }
+        public float LastZ { get; set; }
         public List<Property> Properties { get; set; }
 
         //public double[] last_location { get; set; } = new double[] { -1167.994, -700.4285, 21.89281 };

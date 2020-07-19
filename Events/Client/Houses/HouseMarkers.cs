@@ -14,7 +14,7 @@ namespace Gta5Platinum.Server.Events.Client.Houses
         [ServerEvent(Event.ResourceStart)]
         public void CreateMarker()
         {
-			/*Vector3 pos = new Vector3(-418.83035f, 1147.7933f, 325.86194f);
+            /*Vector3 pos = new Vector3(-418.83035f, 1147.7933f, 325.86194f);
 			Vector3 tpTo = new Vector3(341.05682f, 436.80807f, 149.39407f);
 			Vector3 house = new Vector3(342.21008f, 437.7816f, 149.38077f);
 			Vector3 fromHouse = new Vector3(-419.2538f, 1146.3009f, 325.8557f);
@@ -36,47 +36,51 @@ namespace Gta5Platinum.Server.Events.Client.Houses
 			
 			houseShape.SetData("Marker", houseMarker);
 			houseShape.SetData("Position", fromHouse);
-			houseShape.SetData("Rotation", backRot);*/
-			/*List<House> houses;
+			houseShape.SetData("Rotation", backRot);*/             
 
-			using (var dbContext = new Gta5PlatinumDbContext())
+            using (var dbContext = new Gta5PlatinumDbContext())
             {
 				//dbContext.Houses.AsNoTracking().Include(a => a.ExteriorPosition);
 
 
-				houses = dbContext.Houses.ToList();
+				List<House> houses = dbContext.Houses.ToList();
+				
+				houses = dbContext.Houses.Include(a => a.Inventory).ToList();
+				
+				if(houses != null)
+				foreach (var house in houses)
+				{
+					NAPI.Util.ConsoleOutput(house.ToString());
+					Vector3 extPos = new Vector3() { X = house.ExteriorPositionX, Y = house.ExteriorPositionY, Z = house.ExteriorPositionZ };
+					Vector3 intPos = new Vector3() { X = house.InteriorPositionX, Y = house.InteriorPositionY, Z = house.InteriorPositionZ };
+					Vector3 extRot = new Vector3() { X = 0f, Y = 0f, Z = house.ExteriorRotation };
+
+					Vector3 houseRot = new Vector3(0f, 0f, 139.90523f);//TODO: заменить
+
+					Marker marker = NAPI.Marker.CreateMarker(20, extPos, new Vector3(), new Vector3(0, 0, -15.618415), 1, new Color(115, 115, 115), false, 0);
+					Marker houseMarker = NAPI.Marker.CreateMarker(20, intPos, new Vector3(), new Vector3(0, 0, -15.618415), 1, new Color(115, 115, 115), false, 0);
+
+					ColShape shape = NAPI.ColShape.CreateCylinderColShape(extPos, 1, 1, 0);
+					ColShape houseShape = NAPI.ColShape.CreateCylinderColShape(intPos, 1, 1, 0);
+
+					shape.SetData("Marker", marker);
+					shape.SetData("Position", intPos + new Vector3(-1, -1, -1));
+					shape.SetData("Rotation", houseRot);
+					shape.SetData("House", house);
+					//shape.SetData("Entered", false);
+
+					houseShape.SetData("House", house);
+					houseShape.SetData("Marker", houseMarker);
+					houseShape.SetData("Position", extPos + new Vector3(1, 1, 1));
+					houseShape.SetData("Rotation", extRot);
+				}
 			}
 
-			foreach(var house in houses)
-            {
-				NAPI.Util.ConsoleOutput(house.ToString());
-				Vector3 extPos = new Vector3() { X = house.ExteriorPosition.X, Y = house.ExteriorPosition.Y, Z = house.ExteriorPosition.Z };
-				Vector3 intPos = new Vector3() { X = house.InteriorPositionX, Y = house.InteriorPositionY, Z = house.InteriorPositionZ };
-				Vector3 extRot = new Vector3() { X = 0f, Y = 0f, Z = house.ExteriorRotation };
-
-				Vector3 houseRot = new Vector3(0f, 0f, 139.90523f);//TODO: заменить
-
-				Marker marker = NAPI.Marker.CreateMarker(20, extPos, new Vector3(), new Vector3(0, 0, -15.618415), 1, new Color(115, 115, 115), false, 0);
-				Marker houseMarker = NAPI.Marker.CreateMarker(20, intPos, new Vector3(), new Vector3(0, 0, -15.618415), 1, new Color(115, 115, 115), false, 0);
-
-				ColShape shape = NAPI.ColShape.CreateCylinderColShape(extPos, 1, 1, 0);
-				ColShape houseShape = NAPI.ColShape.CreateCylinderColShape(intPos, 1, 1, 0);
-
-				shape.SetData("Marker", marker);
-				shape.SetData("Position", intPos);
-				shape.SetData("Rotation", houseRot);
-				shape.SetData("House", house);
-				//shape.SetData("Entered", false);
-
-				houseShape.SetData("House", house);
-				houseShape.SetData("Marker", houseMarker);
-				houseShape.SetData("Position", extPos);
-				houseShape.SetData("Rotation", extRot); 
-			}*/
-			
+            
 
 
-		}
+
+        }
 		/*[Command("sh")]
         public ColShape CreateShape(Player player, ColShape shape)
         {
@@ -92,7 +96,7 @@ namespace Gta5Platinum.Server.Events.Client.Houses
 			{
 				player.SendNotification("You entered zone");
 				player.Position = pos;
-				player.Rotation = rot;				
+				player.Rotation = rot;						
 			}
 		}
 

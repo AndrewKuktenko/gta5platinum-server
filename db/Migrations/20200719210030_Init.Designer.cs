@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gta5Platinum.DataAccess.Migrations
 {
     [DbContext(typeof(Gta5PlatinumDbContext))]
-    [Migration("20200719175055_House")]
-    partial class House
+    [Migration("20200719210030_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -143,6 +143,15 @@ namespace Gta5Platinum.DataAccess.Migrations
                     b.Property<int>("Health")
                         .HasColumnType("int");
 
+                    b.Property<float>("LastX")
+                        .HasColumnType("float");
+
+                    b.Property<float>("LastY")
+                        .HasColumnType("float");
+
+                    b.Property<float>("LastZ")
+                        .HasColumnType("float");
+
                     b.Property<string>("Name")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
@@ -179,8 +188,14 @@ namespace Gta5Platinum.DataAccess.Migrations
                     b.Property<int?>("CharacterId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ExteriorPositionId")
-                        .HasColumnType("int");
+                    b.Property<float>("ExteriorPositionX")
+                        .HasColumnType("float");
+
+                    b.Property<float>("ExteriorPositionY")
+                        .HasColumnType("float");
+
+                    b.Property<float>("ExteriorPositionZ")
+                        .HasColumnType("float");
 
                     b.Property<float>("ExteriorRotation")
                         .HasColumnType("float");
@@ -213,9 +228,10 @@ namespace Gta5Platinum.DataAccess.Migrations
                     b.Property<bool>("Owned")
                         .HasColumnType("tinyint(1)");
 
-                    b.HasKey("HouseId");
+                    b.Property<int>("VectorId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("ExteriorPositionId");
+                    b.HasKey("HouseId");
 
                     b.ToTable("Houses");
                 });
@@ -276,6 +292,15 @@ namespace Gta5Platinum.DataAccess.Migrations
 
                     b.Property<bool>("Enterable")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<float>("ExteriorPositionX")
+                        .HasColumnType("float");
+
+                    b.Property<float>("ExteriorPositionY")
+                        .HasColumnType("float");
+
+                    b.Property<float>("ExteriorPositionZ")
+                        .HasColumnType("float");
 
                     b.Property<string>("IPL")
                         .HasColumnType("varchar(48) CHARACTER SET utf8mb4")
@@ -388,7 +413,7 @@ namespace Gta5Platinum.DataAccess.Migrations
                             IsModerator = false,
                             Login = "firstlog",
                             Password = "firstpass",
-                            RegistrationDate = "19.07.2020 20:50:55",
+                            RegistrationDate = "20.07.2020 0:00:29",
                             Serial = "sdq2213sdddewe21213wsdas3d5f",
                             SocialClubId = 5184516684ul,
                             SocialClubName = "petyxblyat"
@@ -612,10 +637,16 @@ namespace Gta5Platinum.DataAccess.Migrations
                     b.Property<int>("Grill")
                         .HasColumnType("int");
 
-                    b.Property<int?>("LastLocationId")
-                        .HasColumnType("int");
-
                     b.Property<float>("LastRotation")
+                        .HasColumnType("float");
+
+                    b.Property<float>("LastX")
+                        .HasColumnType("float");
+
+                    b.Property<float>("LastY")
+                        .HasColumnType("float");
+
+                    b.Property<float>("LastZ")
                         .HasColumnType("float");
 
                     b.Property<int>("MotorTuning")
@@ -652,44 +683,7 @@ namespace Gta5Platinum.DataAccess.Migrations
 
                     b.HasIndex("CharacterId");
 
-                    b.HasIndex("LastLocationId");
-
                     b.ToTable("UserVehicles");
-                });
-
-            modelBuilder.Entity("Gta5Platinum.DataAccess.Account.Vector", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CharacterId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PropertyId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("VehicleId")
-                        .HasColumnType("int");
-
-                    b.Property<float>("X")
-                        .HasColumnType("float");
-
-                    b.Property<float>("Y")
-                        .HasColumnType("float");
-
-                    b.Property<float>("Z")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CharacterId")
-                        .IsUnique();
-
-                    b.HasIndex("PropertyId")
-                        .IsUnique();
-
-                    b.ToTable("Vectors");
                 });
 
             modelBuilder.Entity("Gta5Platinum.DataAccess.Account.Car", b =>
@@ -710,13 +704,6 @@ namespace Gta5Platinum.DataAccess.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Gta5Platinum.DataAccess.Account.House", b =>
-                {
-                    b.HasOne("Gta5Platinum.DataAccess.Account.Vector", "ExteriorPosition")
-                        .WithMany()
-                        .HasForeignKey("ExteriorPositionId");
                 });
 
             modelBuilder.Entity("Gta5Platinum.DataAccess.Account.OrganizationModels.OrganizationMember", b =>
@@ -805,21 +792,6 @@ namespace Gta5Platinum.DataAccess.Migrations
                         .HasForeignKey("CharacterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Gta5Platinum.DataAccess.Account.Vector", "LastLocation")
-                        .WithMany()
-                        .HasForeignKey("LastLocationId");
-                });
-
-            modelBuilder.Entity("Gta5Platinum.DataAccess.Account.Vector", b =>
-                {
-                    b.HasOne("Gta5Platinum.DataAccess.Account.Character", null)
-                        .WithOne("LastPosition")
-                        .HasForeignKey("Gta5Platinum.DataAccess.Account.Vector", "CharacterId");
-
-                    b.HasOne("Gta5Platinum.DataAccess.Account.Property", null)
-                        .WithOne("ExteriorPosition")
-                        .HasForeignKey("Gta5Platinum.DataAccess.Account.Vector", "PropertyId");
                 });
 #pragma warning restore 612, 618
         }

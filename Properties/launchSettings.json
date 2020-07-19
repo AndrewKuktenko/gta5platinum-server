@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Gta5Platinum.Server": {
+      "commandName": "Executable",
+      "executablePath": "F:\\gta5platinum\\platinum\\ragemp-server.exe",
+      "workingDirectory": "F:\\gta5platinum\\platinum",
+      "nativeDebugging": false
+    }
+  }
+}

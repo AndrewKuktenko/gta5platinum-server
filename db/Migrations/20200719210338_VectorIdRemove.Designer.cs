@@ -3,14 +3,16 @@ using System;
 using Gta5Platinum.DataAccess.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Gta5Platinum.DataAccess.Migrations
 {
     [DbContext(typeof(Gta5PlatinumDbContext))]
-    partial class Gta5PlatinumDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200719210338_VectorIdRemove")]
+    partial class VectorIdRemove
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -226,9 +228,6 @@ namespace Gta5Platinum.DataAccess.Migrations
                     b.Property<bool>("Owned")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<int>("Price")
-                        .HasColumnType("int");
-
                     b.HasKey("HouseId");
 
                     b.ToTable("Houses");
@@ -411,7 +410,7 @@ namespace Gta5Platinum.DataAccess.Migrations
                             IsModerator = false,
                             Login = "firstlog",
                             Password = "firstpass",
-                            RegistrationDate = "20.07.2020 0:09:54",
+                            RegistrationDate = "20.07.2020 0:03:36",
                             Serial = "sdq2213sdddewe21213wsdas3d5f",
                             SocialClubId = 5184516684ul,
                             SocialClubName = "petyxblyat"

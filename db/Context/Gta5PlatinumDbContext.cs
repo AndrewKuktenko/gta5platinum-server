@@ -37,8 +37,7 @@ namespace Gta5Platinum.DataAccess.Context
         public DbSet<CharacterClothes> CharacterClothes { get; set; }
         public DbSet<CharacterCustomization> CharacterCustomization { get; set; }
         public DbSet<Organization> Organizations { get; set; }
-        public DbSet<Property> Properties { get; set; }
-        public DbSet<Vector> Vectors { get; set; }
+        public DbSet<Property> Properties { get; set; }        
         public DbSet<House> Houses { get; set; }
         public DbSet<HouseInventory> HouseInventories { get; set; }
 

@@ -65,7 +65,9 @@ namespace Gta5Platinum.Server.Admin
             House house = new House()
             {
                 Name = "Дом №" + number,
-                ExteriorPosition = new Vector() {X = player.Position.X, Y = player.Position.Y, Z = player.Position.Z },
+                ExteriorPositionX = player.Position.X,
+                ExteriorPositionY = player.Position.Y,
+                ExteriorPositionZ = player.Position.Z,
                 ExteriorRotation = player.Rotation.Z,
                 InteriorPositionX = 342.21008f,
                 InteriorPositionY = 437.7816f,

@@ -10,7 +10,10 @@ namespace Gta5Platinum.DataAccess.Account
     {
         [Key]
         public int HouseId { get; set; }
-        public bool Owned { get; set; } = false;
+        [DefaultValue(10000)]
+        public int Price { get; set; }
+        [DefaultValue(false)]
+        public bool Owned { get; set; }
 
         public string Name { get; set; }        
 
@@ -20,10 +23,13 @@ namespace Gta5Platinum.DataAccess.Account
         public int? OrganizationId { get; set; }        
 
         [StringLength(48)]
-        public string IPL { get; set; }
-
-        public Vector ExteriorPosition { get; set; }
+        public string IPL { get; set; }       
+        
+        public float ExteriorPositionX { get; set; }
+        public float ExteriorPositionY { get; set; }
+        public float ExteriorPositionZ { get; set; }
         public float ExteriorRotation { get; set; }
+
         public float InteriorPositionX { get; set; }
         public float InteriorPositionY { get; set; }
         public float InteriorPositionZ { get; set; }
