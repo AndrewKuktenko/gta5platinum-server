@@ -12,6 +12,7 @@ namespace Gta5Platinum.DataAccess.Account.UserModels
         public IEnumerable<InventoryItem> Items { get; set; }
         [ForeignKey("CharacterId")]
         public int CharacterId { get; set; }
+        public int MaxSize { get; set; }
 
         public Inventory()
         {

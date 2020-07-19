@@ -4,6 +4,7 @@ using Gta5Platinum.DataAccess.Account.UserModels;
 using System.Collections.Generic;
 using Gta5Platinum.DataAccess.Account.OrganizationModels;
 using System;
+using Gta5Platinum.DataAccess.Account.PropertyModels;
 
 namespace Gta5Platinum.DataAccess.Context
 {
@@ -14,7 +15,8 @@ namespace Gta5Platinum.DataAccess.Context
         public Gta5PlatinumDbContext()
         {
             //Database.EnsureDeleted();
-            Database.EnsureCreated();
+            /*Database.EnsureCreated();
+            Database.Migrate();*/
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {            
@@ -37,6 +39,8 @@ namespace Gta5Platinum.DataAccess.Context
         public DbSet<Organization> Organizations { get; set; }
         public DbSet<Property> Properties { get; set; }
         public DbSet<Vector> Vectors { get; set; }
+        public DbSet<House> Houses { get; set; }
+        public DbSet<HouseInventory> HouseInventories { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

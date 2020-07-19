@@ -1,4 +1,5 @@
 ﻿//using Gta5Platinum.DataAccess.Account.UserModels;
+using Gta5Platinum.DataAccess.Account;
 using Gta5Platinum.DataAccess.Context;
 using Gta5Platinum.Server.Client.Authorization;
 using Gta5Platinum.Server.Services.Common;
@@ -8,6 +9,7 @@ using GTANetworkAPI;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,6 +21,12 @@ namespace Gta5Platinum.Server.Admin
         public AdminEvents()
         {
             
+        }
+        [Command("coord")]
+        public void SaveCoord(Player player, string name)
+        {
+            string path = @"F:\gta5platinum\platinum\coords\";
+            File.WriteAllText(path + name + ".txt", " Position: " + player.Position.ToString() + "/n" + " Rotation: " + player.Rotation.ToString());
         }
         [Command("getid")]
         public void GetId(Player player)
@@ -34,6 +42,40 @@ namespace Gta5Platinum.Server.Admin
         public void Carpawn(Player player, Player player1)
         {
             player.EnableVoiceTo(player1);
+
+        }
+        [Command("hs")]
+        public void CreateHouse(Player player, int number)
+        {            
+            Vector3 housePos = player.Position;
+            Vector3 houseExitRot = player.Rotation; 
+            Vector3 tpTo = new Vector3(341.05682f, 436.80807f, 149.39407f);
+            Vector3 houseCoord = new Vector3(342.21008f, 437.7816f, 149.38077f);
+            Vector3 fromHouse = player.Position;
+            Vector3 houseEnterRot = new Vector3(0f, 0f, 139.90523f);
+            
+
+
+            Marker marker = NAPI.Marker.CreateMarker(20, housePos, new Vector3(), houseExitRot, 1, new Color(115, 115, 115), false, 0);
+            Marker houseMarker = NAPI.Marker.CreateMarker(20, houseCoord, new Vector3(), new Vector3(0, 0, -15.618415), 1, new Color(115, 115, 115), false, 0);
+
+            ColShape shape = NAPI.ColShape.CreateCylinderColShape(housePos, 1, 1, 0);
+            ColShape houseShape = NAPI.ColShape.CreateCylinderColShape(houseCoord, 1, 1, 0);
+
+            House house = new House()
+            {
+                Name = "Дом №" + number,
+                ExteriorPosition = new Vector() {X = player.Position.X, Y = player.Position.Y, Z = player.Position.Z },
+                ExteriorRotation = player.Rotation.Z,
+                InteriorPositionX = 342.21008f,
+                InteriorPositionY = 437.7816f,
+                InteriorPositionZ = 149.38077f
+            };
+            using (var dbContext = new Gta5PlatinumDbContext())
+            {
+                dbContext.Houses.Add(house);
+                dbContext.SaveChanges();
+            }
 
         }
 
@@ -61,8 +103,13 @@ namespace Gta5Platinum.Server.Admin
         }
         [Command("spawnped")]
         public void SpawnPed(Player player, PedHash skin)
-        {
-            var ped = NAPI.Ped.CreatePed(skin, player.Position.Around(5), -1);
+        {            
+            var peda = NAPI.Ped.CreatePed(skin, player.Position.Around(5), -1);
+            Player ped = new Player(peda);
+            NAPI.Player.SpawnPlayer(ped, player.Position.Around(6));
+            NAPI.Player.SetPlayerSkin(ped, skin);
+            NAPI.ClientEvent.TriggerClientEvent(player, "setFollow", player, ped, true);                      
+                        
             /*mp.events.add('setFollow', function(toggle, entity) {  /// entity is the guy that player will follow him
                 if (toggle)
                 {

@@ -13,7 +13,8 @@ namespace Gta5Platinum.DataAccess.Migrations
                 columns: table => new
                 {
                     InventoryId = table.Column<Guid>(nullable: false),
-                    CharacterId = table.Column<int>(nullable: false)
+                    CharacterId = table.Column<int>(nullable: false),
+                    MaxSize = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -21,7 +22,7 @@ namespace Gta5Platinum.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Organization",
+                name: "Organizations",
                 columns: table => new
                 {
                     OrganizationId = table.Column<int>(nullable: false)
@@ -32,7 +33,7 @@ namespace Gta5Platinum.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Organization", x => x.OrganizationId);
+                    table.PrimaryKey("PK_Organizations", x => x.OrganizationId);
                 });
 
             migrationBuilder.CreateTable(
@@ -43,6 +44,7 @@ namespace Gta5Platinum.DataAccess.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Email = table.Column<string>(nullable: true),
                     Password = table.Column<string>(nullable: true),
+                    RegistrationDate = table.Column<string>(nullable: true),
                     Login = table.Column<string>(nullable: true),
                     Serial = table.Column<string>(nullable: true),
                     SocialClubName = table.Column<string>(nullable: true),
@@ -56,24 +58,6 @@ namespace Gta5Platinum.DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.UserId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Vector",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    PropertyId = table.Column<int>(nullable: true),
-                    CharacterId = table.Column<int>(nullable: true),
-                    VehicleId = table.Column<int>(nullable: true),
-                    X = table.Column<float>(nullable: false),
-                    Y = table.Column<float>(nullable: false),
-                    Z = table.Column<float>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Vector", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -118,9 +102,9 @@ namespace Gta5Platinum.DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_Car", x => x.CarId);
                     table.ForeignKey(
-                        name: "FK_Car_Organization_OrganizationId",
+                        name: "FK_Car_Organizations_OrganizationId",
                         column: x => x.OrganizationId,
-                        principalTable: "Organization",
+                        principalTable: "Organizations",
                         principalColumn: "OrganizationId",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -134,23 +118,21 @@ namespace Gta5Platinum.DataAccess.Migrations
                     Gender = table.Column<bool>(nullable: false),
                     Name = table.Column<string>(nullable: true),
                     NameTag = table.Column<string>(nullable: true),
+                    Age = table.Column<int>(nullable: false),
                     Health = table.Column<int>(nullable: false),
                     Armour = table.Column<int>(nullable: false),
                     OrganizationId = table.Column<int>(nullable: true),
                     UserId = table.Column<int>(nullable: false),
                     jail = table.Column<int>(nullable: false),
-                    jailtime = table.Column<int>(nullable: false),
-                    Xpos = table.Column<float>(nullable: false),
-                    Ypos = table.Column<float>(nullable: false),
-                    Zpos = table.Column<float>(nullable: false)
+                    jailtime = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Characters", x => x.CharacterId);
                     table.ForeignKey(
-                        name: "FK_Characters_Organization_OrganizationId",
+                        name: "FK_Characters_Organizations_OrganizationId",
                         column: x => x.OrganizationId,
-                        principalTable: "Organization",
+                        principalTable: "Organizations",
                         principalColumn: "OrganizationId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -271,40 +253,94 @@ namespace Gta5Platinum.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Property",
+                name: "OrganizationMembers",
                 columns: table => new
                 {
-                    PropertyID = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    CharacterId = table.Column<int>(nullable: false),
+                    OrganizationId = table.Column<int>(nullable: true),
+                    Leader = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrganizationMembers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OrganizationMembers_Characters_CharacterId",
+                        column: x => x.CharacterId,
+                        principalTable: "Characters",
+                        principalColumn: "CharacterId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OrganizationMembers_Organizations_OrganizationId",
+                        column: x => x.OrganizationId,
+                        principalTable: "Organizations",
+                        principalColumn: "OrganizationId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Properties",
+                columns: table => new
+                {
+                    PropertyId = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
                     Type = table.Column<int>(nullable: false),
                     CharacterId = table.Column<int>(nullable: false),
                     OrganizationId = table.Column<int>(nullable: false),
                     IPL = table.Column<string>(maxLength: 48, nullable: true),
-                    ExtPosX = table.Column<float>(nullable: false),
-                    ExtPosY = table.Column<float>(nullable: false),
-                    ExtPosZ = table.Column<float>(nullable: false),
-                    IntPosX = table.Column<float>(nullable: false),
-                    IntPosY = table.Column<float>(nullable: false),
-                    IntPosZ = table.Column<float>(nullable: false),
+                    InteriorPositionX = table.Column<float>(nullable: false),
+                    InteriorPositionY = table.Column<float>(nullable: false),
+                    InteriorPositionZ = table.Column<float>(nullable: false),
                     Enterable = table.Column<bool>(nullable: false),
                     Stock = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Property", x => x.PropertyID);
+                    table.PrimaryKey("PK_Properties", x => x.PropertyId);
                     table.ForeignKey(
-                        name: "FK_Property_Characters_CharacterId",
+                        name: "FK_Properties_Characters_CharacterId",
                         column: x => x.CharacterId,
                         principalTable: "Characters",
                         principalColumn: "CharacterId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Property_Organization_OrganizationId",
+                        name: "FK_Properties_Organizations_OrganizationId",
                         column: x => x.OrganizationId,
-                        principalTable: "Organization",
+                        principalTable: "Organizations",
                         principalColumn: "OrganizationId",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Vectors",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    PropertyId = table.Column<int>(nullable: true),
+                    CharacterId = table.Column<int>(nullable: true),
+                    VehicleId = table.Column<int>(nullable: true),
+                    X = table.Column<float>(nullable: false),
+                    Y = table.Column<float>(nullable: false),
+                    Z = table.Column<float>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Vectors", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Vectors_Characters_CharacterId",
+                        column: x => x.CharacterId,
+                        principalTable: "Characters",
+                        principalColumn: "CharacterId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Vectors_Properties_PropertyId",
+                        column: x => x.PropertyId,
+                        principalTable: "Properties",
+                        principalColumn: "PropertyId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -313,6 +349,7 @@ namespace Gta5Platinum.DataAccess.Migrations
                 {
                     VehicleId = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    CharacterId = table.Column<int>(nullable: false),
                     LastLocationId = table.Column<int>(nullable: true),
                     Carslot = table.Column<int>(nullable: false),
                     CarModel = table.Column<string>(nullable: true),
@@ -334,8 +371,7 @@ namespace Gta5Platinum.DataAccess.Migrations
                     FrontWheels = table.Column<int>(nullable: false),
                     RearWheels = table.Column<int>(nullable: false),
                     Window = table.Column<int>(nullable: false),
-                    Suspension = table.Column<int>(nullable: false),
-                    CharacterId = table.Column<int>(nullable: true)
+                    Suspension = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -345,19 +381,19 @@ namespace Gta5Platinum.DataAccess.Migrations
                         column: x => x.CharacterId,
                         principalTable: "Characters",
                         principalColumn: "CharacterId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserVehicles_Vector_LastLocationId",
+                        name: "FK_UserVehicles_Vectors_LastLocationId",
                         column: x => x.LastLocationId,
-                        principalTable: "Vector",
+                        principalTable: "Vectors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "UserId", "DonateBalance", "Email", "Ip", "IsAdmin", "IsHelper", "IsModerator", "Login", "Password", "Serial", "SocialClubId", "SocialClubName" },
-                values: new object[] { 1, 0, "mail@mail.com", "127.0.0.1", false, false, false, "firstlog", "firstpass", "sdq2213sdddewe21213wsdas3d5f", 5184516684ul, "petyxblyat" });
+                columns: new[] { "UserId", "DonateBalance", "Email", "Ip", "IsAdmin", "IsHelper", "IsModerator", "Login", "Password", "RegistrationDate", "Serial", "SocialClubId", "SocialClubName" },
+                values: new object[] { 1, 0, "mail@mail.com", "127.0.0.1", false, false, false, "firstlog", "firstpass", "19.07.2020 20:49:41", "sdq2213sdddewe21213wsdas3d5f", 5184516684ul, "petyxblyat" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Car_OrganizationId",
@@ -403,13 +439,23 @@ namespace Gta5Platinum.DataAccess.Migrations
                 column: "InventoryId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Property_CharacterId",
-                table: "Property",
+                name: "IX_OrganizationMembers_CharacterId",
+                table: "OrganizationMembers",
                 column: "CharacterId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Property_OrganizationId",
-                table: "Property",
+                name: "IX_OrganizationMembers_OrganizationId",
+                table: "OrganizationMembers",
+                column: "OrganizationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Properties_CharacterId",
+                table: "Properties",
+                column: "CharacterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Properties_OrganizationId",
+                table: "Properties",
                 column: "OrganizationId");
 
             migrationBuilder.CreateIndex(
@@ -421,6 +467,18 @@ namespace Gta5Platinum.DataAccess.Migrations
                 name: "IX_UserVehicles_LastLocationId",
                 table: "UserVehicles",
                 column: "LastLocationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Vectors_CharacterId",
+                table: "Vectors",
+                column: "CharacterId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Vectors_PropertyId",
+                table: "Vectors",
+                column: "PropertyId",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -441,7 +499,7 @@ namespace Gta5Platinum.DataAccess.Migrations
                 name: "InventoryItems");
 
             migrationBuilder.DropTable(
-                name: "Property");
+                name: "OrganizationMembers");
 
             migrationBuilder.DropTable(
                 name: "UserVehicles");
@@ -450,13 +508,16 @@ namespace Gta5Platinum.DataAccess.Migrations
                 name: "Inventories");
 
             migrationBuilder.DropTable(
+                name: "Vectors");
+
+            migrationBuilder.DropTable(
+                name: "Properties");
+
+            migrationBuilder.DropTable(
                 name: "Characters");
 
             migrationBuilder.DropTable(
-                name: "Vector");
-
-            migrationBuilder.DropTable(
-                name: "Organization");
+                name: "Organizations");
 
             migrationBuilder.DropTable(
                 name: "Users");

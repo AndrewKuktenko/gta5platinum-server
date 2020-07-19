@@ -168,6 +168,56 @@ namespace Gta5Platinum.DataAccess.Migrations
                     b.ToTable("Characters");
                 });
 
+            modelBuilder.Entity("Gta5Platinum.DataAccess.Account.House", b =>
+                {
+                    b.Property<int>("HouseId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CharacterId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ExteriorPositionId")
+                        .HasColumnType("int");
+
+                    b.Property<float>("ExteriorRotation")
+                        .HasColumnType("float");
+
+                    b.Property<string>("IPL")
+                        .HasColumnType("varchar(48) CHARACTER SET utf8mb4")
+                        .HasMaxLength(48);
+
+                    b.Property<float>("InteriorPositionX")
+                        .HasColumnType("float");
+
+                    b.Property<float>("InteriorPositionY")
+                        .HasColumnType("float");
+
+                    b.Property<float>("InteriorPositionZ")
+                        .HasColumnType("float");
+
+                    b.Property<float>("InteriorRotation")
+                        .HasColumnType("float");
+
+                    b.Property<bool>("Locked")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<int?>("OrganizationId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Owned")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("HouseId");
+
+                    b.HasIndex("ExteriorPositionId");
+
+                    b.ToTable("Houses");
+                });
+
             modelBuilder.Entity("Gta5Platinum.DataAccess.Account.Organization", b =>
                 {
                     b.Property<int>("OrganizationId")
@@ -259,6 +309,25 @@ namespace Gta5Platinum.DataAccess.Migrations
                     b.ToTable("Properties");
                 });
 
+            modelBuilder.Entity("Gta5Platinum.DataAccess.Account.PropertyModels.HouseInventory", b =>
+                {
+                    b.Property<Guid>("InventoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("HouseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaxSize")
+                        .HasColumnType("int");
+
+                    b.HasKey("InventoryId");
+
+                    b.HasIndex("HouseId");
+
+                    b.ToTable("HouseInventories");
+                });
+
             modelBuilder.Entity("Gta5Platinum.DataAccess.Account.User", b =>
                 {
                     b.Property<int>("UserId")
@@ -317,6 +386,7 @@ namespace Gta5Platinum.DataAccess.Migrations
                             IsModerator = false,
                             Login = "firstlog",
                             Password = "firstpass",
+                            RegistrationDate = "19.07.2020 20:50:55",
                             Serial = "sdq2213sdddewe21213wsdas3d5f",
                             SocialClubId = 5184516684ul,
                             SocialClubName = "petyxblyat"
@@ -458,6 +528,9 @@ namespace Gta5Platinum.DataAccess.Migrations
                     b.Property<int>("CharacterId")
                         .HasColumnType("int");
 
+                    b.Property<int>("MaxSize")
+                        .HasColumnType("int");
+
                     b.HasKey("InventoryId");
 
                     b.ToTable("Inventories");
@@ -475,6 +548,9 @@ namespace Gta5Platinum.DataAccess.Migrations
                     b.Property<int?>("CharacterId")
                         .HasColumnType("int");
 
+                    b.Property<Guid?>("HouseInventoryInventoryId")
+                        .HasColumnType("char(36)");
+
                     b.Property<int>("InventoryId")
                         .HasColumnType("int");
 
@@ -487,6 +563,8 @@ namespace Gta5Platinum.DataAccess.Migrations
                     b.HasKey("ItemId");
 
                     b.HasIndex("CharacterId");
+
+                    b.HasIndex("HouseInventoryInventoryId");
 
                     b.HasIndex("InventoryId1");
 
@@ -632,6 +710,13 @@ namespace Gta5Platinum.DataAccess.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Gta5Platinum.DataAccess.Account.House", b =>
+                {
+                    b.HasOne("Gta5Platinum.DataAccess.Account.Vector", "ExteriorPosition")
+                        .WithMany()
+                        .HasForeignKey("ExteriorPositionId");
+                });
+
             modelBuilder.Entity("Gta5Platinum.DataAccess.Account.OrganizationModels.OrganizationMember", b =>
                 {
                     b.HasOne("Gta5Platinum.DataAccess.Account.Character", "Character")
@@ -656,6 +741,15 @@ namespace Gta5Platinum.DataAccess.Migrations
                     b.HasOne("Gta5Platinum.DataAccess.Account.Organization", "Organization")
                         .WithMany("Properties")
                         .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Gta5Platinum.DataAccess.Account.PropertyModels.HouseInventory", b =>
+                {
+                    b.HasOne("Gta5Platinum.DataAccess.Account.House", null)
+                        .WithMany("Inventory")
+                        .HasForeignKey("HouseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -692,6 +786,10 @@ namespace Gta5Platinum.DataAccess.Migrations
                     b.HasOne("Gta5Platinum.DataAccess.Account.Character", null)
                         .WithMany("CharacterInventory")
                         .HasForeignKey("CharacterId");
+
+                    b.HasOne("Gta5Platinum.DataAccess.Account.PropertyModels.HouseInventory", null)
+                        .WithMany("Items")
+                        .HasForeignKey("HouseInventoryInventoryId");
 
                     b.HasOne("Gta5Platinum.DataAccess.Account.UserModels.Inventory", null)
                         .WithMany("Items")

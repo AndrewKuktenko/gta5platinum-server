@@ -28,7 +28,8 @@ namespace Gta5Platinum.Server.Client.Authorization
 
             if (loginInfo.Status == 1) // Успешный вход
             {
-                player.SetData<int>("UserId", (int)loginInfo.UserId);
+                player.SetSharedData("UserId", loginInfo.UserId);
+                player.SetSharedData("CharacterId", 23);
                 player.TriggerEvent("LoginResult", 1);
                 player.TriggerEvent("OpenCharacterSelector");
                 OnSignInCharacterEvents charEvents = new OnSignInCharacterEvents();

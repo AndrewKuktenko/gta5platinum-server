@@ -7,17 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20200621174447_platinum.cs" />
-    <Compile Remove="Migrations\20200621174447_platinum.Designer.cs" />
-    <Compile Remove="Migrations\20200707224736_platinum.cs" />
-    <Compile Remove="Migrations\20200707224736_platinum.Designer.cs" />
-    <Compile Remove="Migrations\20200707230529_platinum.cs" />
-    <Compile Remove="Migrations\20200707230529_platinum.Designer.cs" />
-    <Compile Remove="Migrations\20200708194118_platunim0001.cs" />
-    <Compile Remove="Migrations\20200708194118_platunim0001.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.5">
