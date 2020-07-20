@@ -58,18 +58,20 @@ namespace Gta5Platinum.Server.Events.Client.Houses
 					Vector3 houseRot = new Vector3(0f, 0f, 139.90523f);//TODO: заменить
 
 					Marker marker = NAPI.Marker.CreateMarker(20, extPos, new Vector3(), new Vector3(0, 0, -15.618415), 1, new Color(115, 115, 115), false, 0);
-					Marker houseMarker = NAPI.Marker.CreateMarker(20, intPos, new Vector3(), new Vector3(0, 0, -15.618415), 1, new Color(115, 115, 115), false, 0);
+					Marker houseMarker = NAPI.Marker.CreateMarker(20, intPos, new Vector3(), new Vector3(0, 0, -15.618415), 1, new Color(115, 115, 115), false, Convert.ToUInt32(house.HouseId));
 
 					ColShape shape = NAPI.ColShape.CreateCylinderColShape(extPos, 1, 1, 0);
-					ColShape houseShape = NAPI.ColShape.CreateCylinderColShape(intPos, 1, 1, 0);
+					ColShape houseShape = NAPI.ColShape.CreateCylinderColShape(intPos, 1, 1, Convert.ToUInt32(house.HouseId));
 
 					shape.SetData("Marker", marker);
+					shape.SetData("Dimension", house.HouseId);
 					shape.SetData("Position", intPos + new Vector3(-1, -1, -1));
 					shape.SetData("Rotation", houseRot);
 					shape.SetData("House", house);
 					//shape.SetData("Entered", false);
 
 					houseShape.SetData("House", house);
+					houseShape.SetData("Dimension", 0);
 					houseShape.SetData("Marker", houseMarker);
 					houseShape.SetData("Position", extPos + new Vector3(1, 1, 1));
 					houseShape.SetData("Rotation", extRot);
@@ -92,9 +94,11 @@ namespace Gta5Platinum.Server.Events.Client.Houses
 			Marker marker = colshape.GetData<Marker>("Marker");
 			Vector3 pos = colshape.GetData<Vector3>("Position");
 			Vector3 rot = colshape.GetData<Vector3>("Rotation");
+			int dimension = colshape.GetData<int>("Dimension");
 			if (marker != null)
 			{
 				player.SendNotification("You entered zone");
+				player.Dimension = Convert.ToUInt32(dimension);
 				player.Position = pos;
 				player.Rotation = rot;						
 			}
