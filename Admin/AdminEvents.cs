@@ -29,7 +29,7 @@ namespace Gta5Platinum.Server.Admin
             File.WriteAllText(path + name + ".txt", " Position: " + player.Position.ToString() + "/n" + " Rotation: " + player.Rotation.ToString());
         }
         [Command("getid")]
-        public void GetId(Player player)
+        public void GetAId(Player player)
         {
 
             player.GetData<int>("ID");
@@ -92,14 +92,14 @@ namespace Gta5Platinum.Server.Admin
             }
         }
 
-        [Command("event")]
-        public void ServerToClientEvent(Player player)
+        [Command("id")]
+        public void GetId(Player player)
         {
             
-;            var test = new Test() { value = "text", text = "testtext" };
+;           int userId = player.GetData<int>("UserId");
+            int characterId = player.GetData<int>("CharacterId");
 
-            player.TriggerEvent("onMessageFromServer", NAPI.Util.ToJson(test).ToString());
-            NAPI.Util.ConsoleOutput(NAPI.Util.ToJson(test).ToString());
+            NAPI.Chat.SendChatMessageToAll($"User: {userId}\n Character: {characterId}");
             
             
         }

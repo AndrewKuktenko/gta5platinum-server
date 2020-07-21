@@ -30,6 +30,7 @@ namespace Gta5Platinum.DataAccess.Account
         public float LastY { get; set; }
         public float LastZ { get; set; }
         public List<Property> Properties { get; set; }
+        public List<House> Houses { get; set; }
 
         //public double[] last_location { get; set; } = new double[] { -1167.994, -700.4285, 21.89281 };
         //public double[] temp_location { get; set; }
@@ -39,6 +40,7 @@ namespace Gta5Platinum.DataAccess.Account
             CharacterInventory = new List<InventoryItem>();
             UserVehicles = new List<UserVehicle>();
             Properties = new List<Property>();
+            Houses = new List<House>();
         }
     }
 }

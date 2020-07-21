@@ -54,6 +54,8 @@ namespace Gta5Platinum.Server.Events.Client.Houses
 					Vector3 extPos = new Vector3() { X = house.ExteriorPositionX, Y = house.ExteriorPositionY, Z = house.ExteriorPositionZ };
 					Vector3 intPos = new Vector3() { X = house.InteriorPositionX, Y = house.InteriorPositionY, Z = house.InteriorPositionZ };
 					Vector3 extRot = new Vector3() { X = 0f, Y = 0f, Z = house.ExteriorRotation };
+					TextLabel textLabel = NAPI.TextLabel.CreateTextLabel($"Дом: {house.HouseId}\n Цена: {house.Price}", extPos, 5, 5, 1, new Color(255, 255, 255), false, 0);
+
 
 					Vector3 houseRot = new Vector3(0f, 0f, 139.90523f);//TODO: заменить
 
@@ -95,6 +97,28 @@ namespace Gta5Platinum.Server.Events.Client.Houses
 			Vector3 pos = colshape.GetData<Vector3>("Position");
 			Vector3 rot = colshape.GetData<Vector3>("Rotation");
 			int dimension = colshape.GetData<int>("Dimension");
+            if (colshape.HasData("House"))
+            {
+				int playerId = player.GetData<int>("CharacterId");
+				House houseData = colshape.GetData<House>("House");
+				//Функционал под покупку домов
+				if(houseData.Owned != true)
+                {
+					using (var dbContext = new Gta5PlatinumDbContext())
+					{
+						var house = dbContext.Houses.Single(a => a.HouseId == houseData.HouseId);
+						house.CharacterId = playerId;
+						house.Owned = true;
+						dbContext.Houses.Single(a => a.HouseId == houseData.HouseId).Owned = true;
+
+						dbContext.Characters.Single(a => a.CharacterId == playerId).Houses.Add(house);
+
+						dbContext.SaveChanges();
+
+						colshape.SetData("House", house);
+					}
+				}				
+            }
 			if (marker != null)
 			{
 				player.SendNotification("You entered zone");
