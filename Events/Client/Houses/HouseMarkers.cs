@@ -14,6 +14,14 @@ namespace Gta5Platinum.Server.Events.Client.Houses
         [ServerEvent(Event.ResourceStart)]
         public void CreateMarker()
         {
+            //NAPI.World.RequestIpl("apa_v_mp_h_08_b");
+            //NAPI.World.RequestIpl("vw_casino_main﻿");
+            /*NAPI.World.RequestIpl("apa_v_mp_h_06_b");
+            NAPI.World.RequestIpl("apa_v_mp_h_05_b");
+            NAPI.World.RequestIpl("apa_v_mp_h_01_b");
+            NAPI.World.RequestIpl("apa_v_mp_h_04_b");
+            NAPI.World.RequestIpl("apa_v_mp_h_03_b");*/
+            //NAPI.World.RequestIpl("apa_v_mp_h_02_b");
             /*Vector3 pos = new Vector3(-418.83035f, 1147.7933f, 325.86194f);
 			Vector3 tpTo = new Vector3(341.05682f, 436.80807f, 149.39407f);
 			Vector3 house = new Vector3(342.21008f, 437.7816f, 149.38077f);
@@ -36,7 +44,7 @@ namespace Gta5Platinum.Server.Events.Client.Houses
 			
 			houseShape.SetData("Marker", houseMarker);
 			houseShape.SetData("Position", fromHouse);
-			houseShape.SetData("Rotation", backRot);*/             
+			houseShape.SetData("Rotation", backRot);*/
 
             using (var dbContext = new Gta5PlatinumDbContext())
             {
@@ -66,16 +74,16 @@ namespace Gta5Platinum.Server.Events.Client.Houses
 					ColShape houseShape = NAPI.ColShape.CreateCylinderColShape(intPos, 1, 1, Convert.ToUInt32(house.HouseId));
 
 					shape.SetData("Marker", marker);
-					shape.SetData("Dimension", house.HouseId);
-					shape.SetData("Position", intPos + new Vector3(-1, -1, -1));
+					shape.SetSharedData("Dimension", house.HouseId);						
+					shape.SetSharedData("Position", NAPI.Util.ToJson(intPos));						
 					shape.SetData("Rotation", houseRot);
 					shape.SetData("House", house);
 					//shape.SetData("Entered", false);
 
 					houseShape.SetData("House", house);
-					houseShape.SetData("Dimension", 0);
+					houseShape.SetSharedData("Dimension", 0);
 					houseShape.SetData("Marker", houseMarker);
-					houseShape.SetData("Position", extPos + new Vector3(1, 1, 1));
+					houseShape.SetSharedData("Position", NAPI.Util.ToJson(extPos));
 					houseShape.SetData("Rotation", extRot);
 				}
 			}
@@ -85,50 +93,50 @@ namespace Gta5Platinum.Server.Events.Client.Houses
 
 
         }
-		/*[Command("sh")]
+        /*[Command("sh")]
         public ColShape CreateShape(Player player, ColShape shape)
         {
             shape = CreateMarker(player);
         }*/
-		[ServerEvent(Event.PlayerEnterColshape)]
-		public void Event_EnterColshape(ColShape colshape, Player player)
-		{			
-			Marker marker = colshape.GetData<Marker>("Marker");
-			Vector3 pos = colshape.GetData<Vector3>("Position");
-			Vector3 rot = colshape.GetData<Vector3>("Rotation");
-			int dimension = colshape.GetData<int>("Dimension");
+        [ServerEvent(Event.PlayerEnterColshape)]
+        public void Event_EnterColshape(ColShape colshape, Player player)
+        {			
+			/*Marker marker = colshape.GetData<Marker>("Marker");
+            Vector3 pos = colshape.GetData<Vector3>("Position");
+            Vector3 rot = colshape.GetData<Vector3>("Rotation");
+            int dimension = colshape.GetData<int>("Dimension");
             if (colshape.HasData("House"))
             {
-				int playerId = player.GetData<int>("CharacterId");
-				House houseData = colshape.GetData<House>("House");
-				//Функционал под покупку домов
-				if(houseData.Owned != true)
+                int playerId = player.GetData<int>("CharacterId");
+                House houseData = colshape.GetData<House>("House");
+                //Функционал под покупку домов
+                if (houseData.Owned != true)
                 {
-					using (var dbContext = new Gta5PlatinumDbContext())
-					{
-						var house = dbContext.Houses.Single(a => a.HouseId == houseData.HouseId);
-						house.CharacterId = playerId;
-						house.Owned = true;
-						dbContext.Houses.Single(a => a.HouseId == houseData.HouseId).Owned = true;
+                    using (var dbContext = new Gta5PlatinumDbContext())
+                    {
+                        var house = dbContext.Houses.Single(a => a.HouseId == houseData.HouseId);
+                        house.CharacterId = playerId;
+                        house.Owned = true;
+                        dbContext.Houses.Single(a => a.HouseId == houseData.HouseId).Owned = true;
 
-						dbContext.Characters.Single(a => a.CharacterId == playerId).Houses.Add(house);
+                        dbContext.Characters.Single(a => a.CharacterId == playerId).Houses.Add(house);
 
-						dbContext.SaveChanges();
+                        dbContext.SaveChanges();
 
-						colshape.SetData("House", house);
-					}
-				}				
+                        colshape.SetData("House", house);
+                    }
+                }
             }
-			if (marker != null)
-			{
-				player.SendNotification("You entered zone");
-				player.Dimension = Convert.ToUInt32(dimension);
-				player.Position = pos;
-				player.Rotation = rot;						
-			}
+            if (marker != null)
+            {
+                player.SendNotification("You entered zone");
+                player.Dimension = Convert.ToUInt32(dimension);
+                player.Position = pos;
+                player.Rotation = rot;
+            }*/
 		}
 
-		[ServerEvent(Event.PlayerExitColshape)]
+        [ServerEvent(Event.PlayerExitColshape)]
 		public void Event_ExitColshape(ColShape colshape, Player player)
 		{
 			Marker marker = colshape.GetData<Marker>("Marker");

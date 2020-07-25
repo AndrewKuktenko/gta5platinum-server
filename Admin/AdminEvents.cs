@@ -16,17 +16,19 @@ using System.Threading.Tasks;
 namespace Gta5Platinum.Server.Admin
 {
     public class AdminEvents : Script
-    {                
-        
-        public AdminEvents()
-        {
-            
-        }
+    {              
+                
         [Command("coord")]
         public void SaveCoord(Player player, string name)
         {
             string path = @"F:\gta5platinum\platinum\coords\";
             File.WriteAllText(path + name + ".txt", " Position: " + player.Position.ToString() + "/n" + " Rotation: " + player.Rotation.ToString());
+        }
+        [RemoteEvent("SetPlayerDimension")]
+        public void SetDimention(Player player, uint dimension)
+        {
+            player.Dimension = dimension;
+
         }
         [Command("getid")]
         public void GetAId(Player player)
@@ -37,31 +39,10 @@ namespace Gta5Platinum.Server.Admin
             int aInfo = player.Id;
             NAPI.Chat.SendChatMessageToPlayer(player, $"Data{pInfo} Id{aInfo}");
         }
-
-        [Command("voice")]
-        public void Carpawn(Player player, Player player1)
-        {
-            player.EnableVoiceTo(player1);
-
-        }
+                
         [Command("hs")]
         public void CreateHouse(Player player, int number)
-        {            
-            Vector3 housePos = player.Position;
-            Vector3 houseExitRot = player.Rotation; 
-            Vector3 tpTo = new Vector3(341.05682f, 436.80807f, 149.39407f);
-            Vector3 houseCoord = new Vector3(342.21008f, 437.7816f, 149.38077f);
-            Vector3 fromHouse = player.Position;
-            Vector3 houseEnterRot = new Vector3(0f, 0f, 139.90523f);
-            
-
-
-            Marker marker = NAPI.Marker.CreateMarker(20, housePos, new Vector3(), houseExitRot, 1, new Color(115, 115, 115), false, 0);
-            Marker houseMarker = NAPI.Marker.CreateMarker(20, houseCoord, new Vector3(), new Vector3(0, 0, -15.618415), 1, new Color(115, 115, 115), false, 0);
-
-            ColShape shape = NAPI.ColShape.CreateCylinderColShape(housePos, 1, 1, 0);
-            ColShape houseShape = NAPI.ColShape.CreateCylinderColShape(houseCoord, 1, 1, 0);
-
+        {    
             House house = new House()
             {
                 Name = "Дом №" + number,
@@ -71,7 +52,52 @@ namespace Gta5Platinum.Server.Admin
                 ExteriorRotation = player.Rotation.Z,
                 InteriorPositionX = 342.21008f,
                 InteriorPositionY = 437.7816f,
-                InteriorPositionZ = 149.38077f
+                InteriorPositionZ = 149.38077f,
+                InteriorRotation = 139.90523f
+            };
+            using (var dbContext = new Gta5PlatinumDbContext())
+            {
+                dbContext.Houses.Add(house);
+                dbContext.SaveChanges();
+            }
+
+        }
+        [Command("hs1")]
+        public void CreateHouse1(Player player, int number)
+        {
+            House house = new House()
+            {
+                Name = "Дом №" + number,
+                ExteriorPositionX = player.Position.X,
+                ExteriorPositionY = player.Position.Y,
+                ExteriorPositionZ = player.Position.Z,
+                ExteriorRotation = player.Rotation.Z,
+                InteriorPositionX = -774.0349f,
+                InteriorPositionY = 342.0296f,
+                InteriorPositionZ = 196.6864f,
+                InteriorRotation = 139.90523f
+            };
+            using (var dbContext = new Gta5PlatinumDbContext())
+            {
+                dbContext.Houses.Add(house);
+                dbContext.SaveChanges();
+            }
+
+        }
+        [Command("hs2")]
+        public void CreateHouse2(Player player, int number)
+        {
+            House house = new House()
+            {
+                Name = "Дом №" + number,
+                ExteriorPositionX = player.Position.X,
+                ExteriorPositionY = player.Position.Y,
+                ExteriorPositionZ = player.Position.Z,
+                ExteriorRotation = player.Rotation.Z,
+                InteriorPositionX = -774.1382f,
+                InteriorPositionY = 342.0428f,
+                InteriorPositionZ = 196.6864f,
+                InteriorRotation = 139.90523f
             };
             using (var dbContext = new Gta5PlatinumDbContext())
             {
@@ -141,7 +167,7 @@ namespace Gta5Platinum.Server.Admin
         [Command("setskin")]
         public void SetSkin(Player player, PedHash skin)
         {            
-            player.SetSkin(skin);
+            player.SetSkin(skin);            
         }
 
         [Command("caracc")]
@@ -210,12 +236,7 @@ namespace Gta5Platinum.Server.Admin
             _userService.CreateUser(player, email, login, password);            
 
         }
-        [Command("dim")]
-        public void SetDimention(Player player, uint dimension)
-        {
-            player.Dimension = dimension;            
-
-        }
+        
         [Command("getdim")]
         public void getDimention(Player player)
         {
